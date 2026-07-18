@@ -22,5 +22,13 @@
     "url": "https://www.youtube.com/@eidon-aetho",
     "visible": true,
     "order": 3
+  },
+  {
+    "name": "Telegram",
+    "icon": "TG",
+    "description": "@eidonaetho",
+    "url": "https://t.me/eidonaetho",
+    "visible": true,
+    "order": 4
   }
 ]
