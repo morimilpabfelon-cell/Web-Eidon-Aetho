@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "deliver-assets",
+    "visible": true,
+    "order": 1,
+    "name": "DELIVER ASSETS",
+    "category": "Aplicación web",
+    "description": "Experiencia web conceptual para una plataforma de entregas, con interfaces diferenciadas para cliente, negocio, repartidor y administración.",
+    "tags": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Motion UI"
+    ],
+    "image": "",
+    "imageAlt": ""
+  }
+]
