@@ -1,0 +1,31 @@
+.hero h1.hero-identity {
+  max-width: none;
+  font-size: clamp(2.25rem, 3vw, 3.45rem);
+  line-height: .94;
+  letter-spacing: -.055em;
+}
+
+.hero-identity > span {
+  display: block;
+  white-space: nowrap;
+}
+
+.hero-identity-mobile {
+  display: none !important;
+}
+
+@media (max-width: 560px) {
+  .hero h1.hero-identity {
+    font-size: clamp(1.5rem, 7.3vw, 2.2rem);
+    line-height: .97;
+    letter-spacing: -.045em;
+  }
+
+  .hero-identity-desktop {
+    display: none !important;
+  }
+
+  .hero-identity-mobile {
+    display: block !important;
+  }
+}
