@@ -14,6 +14,17 @@
   display: none !important;
 }
 
+.hero-identity .bull-mark {
+  display: inline-block;
+  padding: .01em .11em .04em;
+  border: 3px solid var(--ink);
+  background: var(--lime);
+  box-shadow: 4px 4px 0 var(--ink);
+  font: inherit;
+  line-height: .86;
+  letter-spacing: -.035em;
+}
+
 @media (max-width: 560px) {
   .hero h1.hero-identity {
     font-size: clamp(1.5rem, 7.3vw, 2.2rem);
@@ -27,5 +38,10 @@
 
   .hero-identity-mobile {
     display: block !important;
+  }
+
+  .hero-identity .bull-mark {
+    border-width: 2px;
+    box-shadow: 3px 3px 0 var(--ink);
   }
 }
