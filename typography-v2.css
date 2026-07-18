@@ -1,0 +1,150 @@
+:root {
+  --display-font-safe: Arial, Helvetica, "Segoe UI", sans-serif;
+}
+
+html,
+body {
+  font-synthesis: none;
+}
+
+.brand-text strong,
+.main-nav,
+.top-action,
+.hero h1,
+.button,
+.visual-canvas strong,
+.metric-label,
+.metric strong,
+.section-header h2,
+.focus-card h2,
+.closing-card h2,
+.section-index,
+.project-card h3,
+.note-card h3,
+.social-card strong,
+.empty-state strong {
+  font-family: var(--display-font-safe) !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  font-stretch: normal !important;
+  font-variation-settings: normal !important;
+  text-rendering: geometricPrecision;
+}
+
+.brand-text strong {
+  font-size: .95rem !important;
+  line-height: 1.05 !important;
+  letter-spacing: .01em !important;
+}
+
+.main-nav {
+  font-size: .78rem !important;
+  line-height: 1.2 !important;
+  letter-spacing: .01em !important;
+}
+
+.top-action,
+.button {
+  font-size: .76rem !important;
+  line-height: 1.2 !important;
+  letter-spacing: .01em !important;
+}
+
+.hero h1 {
+  width: 100% !important;
+  max-width: 10ch !important;
+  margin: 20px 0 16px !important;
+  font-size: clamp(3rem, 3.7vw, 4.25rem) !important;
+  line-height: .98 !important;
+  letter-spacing: -.045em !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  text-wrap: wrap !important;
+}
+
+.visual-canvas strong {
+  font-size: clamp(3.5rem, 5.4vw, 5rem) !important;
+  line-height: 1 !important;
+  letter-spacing: -.04em !important;
+}
+
+.metric-label {
+  font-size: .88rem !important;
+  line-height: 1.15 !important;
+}
+
+.metric strong {
+  font-size: 1.72rem !important;
+  line-height: 1 !important;
+}
+
+.section-header h2,
+.focus-card h2,
+.closing-card h2 {
+  font-size: clamp(1.65rem, 2.15vw, 2.35rem) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -.025em !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+.compact-header h2 {
+  font-size: clamp(1.5rem, 1.8vw, 1.85rem) !important;
+}
+
+.project-card h3,
+.note-card h3,
+.social-card strong,
+.empty-state strong {
+  line-height: 1.12 !important;
+  letter-spacing: -.01em !important;
+}
+
+.site-shell {
+  width: min(1280px, calc(100% - 32px)) !important;
+}
+
+@media (max-width: 1120px) {
+  .hero h1 {
+    max-width: 10ch !important;
+    font-size: clamp(2.9rem, 6.2vw, 4rem) !important;
+  }
+}
+
+@media (max-width: 820px) {
+  .site-shell {
+    width: 100% !important;
+  }
+
+  .hero h1 {
+    max-width: none !important;
+    font-size: clamp(2.55rem, 9vw, 3.7rem) !important;
+    line-height: 1 !important;
+  }
+
+  .section-header h2,
+  .focus-card h2,
+  .closing-card h2 {
+    font-size: clamp(1.55rem, 5vw, 2.1rem) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero h1 {
+    font-size: clamp(2.2rem, 10.5vw, 3rem) !important;
+  }
+
+  .main-nav {
+    font-size: .74rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero h1 {
+    font-size: 2.1rem !important;
+  }
+
+  .section-header h2 {
+    font-size: 1.5rem !important;
+  }
+}
