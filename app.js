@@ -4,6 +4,8 @@ const DATA_FILES = Object.freeze({
   notes: "data/notes.json"
 });
 
+const HERO_IMAGE_FILE = "assets/eidon-cat.webp.b64";
+
 function isSafeUrl(value) {
   if (typeof value !== "string" || value.trim() === "") return false;
 
@@ -30,6 +32,25 @@ async function loadList(path) {
   } catch (error) {
     console.warn(`No se pudo cargar ${path}.`, error);
     return [];
+  }
+}
+
+async function loadHeroPhoto() {
+  const image = document.querySelector("[data-hero-photo]");
+  if (!image) return;
+
+  try {
+    const response = await fetch(HERO_IMAGE_FILE, { cache: "force-cache" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const encoded = (await response.text()).replace(/\s+/g, "");
+    if (!encoded) throw new Error("La imagen codificada está vacía");
+
+    image.src = `data:image/webp;base64,${encoded}`;
+  } catch (error) {
+    console.warn("No se pudo cargar la imagen del hero.", error);
+    image.removeAttribute("src");
+    image.alt = "Imagen del perfil no disponible";
   }
 }
 
@@ -129,6 +150,24 @@ function socialCard(item) {
   return link;
 }
 
+function heroSocialLink(item) {
+  const link = document.createElement("a");
+  const mark = document.createElement("span");
+  const name = cleanText(item.name, "Enlace");
+
+  link.className = "hero-social-link";
+  link.href = item.url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.setAttribute("aria-label", `${name}, abrir en una pestaña nueva`);
+  link.title = name;
+
+  mark.textContent = cleanText(item.icon, name).slice(0, 3).toUpperCase();
+  mark.setAttribute("aria-hidden", "true");
+  link.append(mark);
+  return link;
+}
+
 function noteCard(note) {
   const article = document.createElement("article");
   const date = document.createElement("div");
@@ -167,15 +206,23 @@ function renderProjects(items) {
 
 function renderSocials(items) {
   const grid = document.querySelector("[data-social-grid]");
-  if (!grid) return;
-
+  const hero = document.querySelector("[data-hero-socials]");
   const socials = visibleItems(items).filter((item) => isSafeUrl(item.url));
+
   setCounters("[data-link-count]", socials.length);
-  grid.replaceChildren(
-    ...(socials.length
-      ? socials.map(socialCard)
-      : [emptyState("Sin enlaces publicados")])
-  );
+
+  if (grid) {
+    grid.replaceChildren(
+      ...(socials.length
+        ? socials.map(socialCard)
+        : [emptyState("Sin enlaces publicados")])
+    );
+  }
+
+  if (hero) {
+    hero.replaceChildren(...socials.map(heroSocialLink));
+    hero.hidden = socials.length === 0;
+  }
 }
 
 function renderNotes(items) {
@@ -195,7 +242,8 @@ async function initialize() {
   const [projects, socials, notes] = await Promise.all([
     loadList(DATA_FILES.projects),
     loadList(DATA_FILES.socials),
-    loadList(DATA_FILES.notes)
+    loadList(DATA_FILES.notes),
+    loadHeroPhoto()
   ]);
 
   renderProjects(projects);
