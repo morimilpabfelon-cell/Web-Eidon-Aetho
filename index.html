@@ -13,7 +13,8 @@
   <link rel="stylesheet" href="background-stickers.css?v=20260718-1">
   <link rel="stylesheet" href="ad-marquee.css?v=20260718-2">
   <link rel="stylesheet" href="hero-profile.css?v=20260718-1">
-  <script src="app.js?v=20260718-4" defer></script>
+  <link rel="stylesheet" href="featured-projects.css?v=20260718-1">
+  <script src="app.js?v=20260718-5" defer></script>
   <script src="ads.js?v=20260718-2" defer></script>
 </head>
 <body>
@@ -63,7 +64,7 @@
             <a class="button button-lime" href="#proyectos">Ver proyectos <span aria-hidden="true">↗</span></a>
             <a class="button button-white" href="#enlaces">Ver enlaces</a>
           </div>
-          <div class="hero-socials" data-hero-socials aria-label="Redes sociales" hidden></div>
+          <div class="hero-socials" id="enlaces" data-hero-socials aria-label="Redes sociales" hidden></div>
         </div>
 
         <div class="hero-visual pink-panel" aria-label="Imagen destacada de Eidon Aetho">
@@ -89,31 +90,18 @@
         </div>
       </section>
 
-      <div class="content-layout">
-        <section class="section-card projects-section" id="proyectos">
-          <header class="section-header">
-            <div>
-              <h2>Proyectos publicados</h2>
-            </div>
-          </header>
-          <div class="project-grid" data-project-grid aria-live="polite"></div>
-        </section>
+      <section class="featured-projects" id="proyectos" aria-labelledby="featured-projects-title">
+        <header class="featured-projects-header">
+          <h2 id="featured-projects-title">Proyectos destacados</h2>
+          <div class="featured-project-controls" aria-label="Controles del carrusel">
+            <button type="button" class="project-arrow" data-project-prev aria-label="Proyecto anterior">‹</button>
+            <button type="button" class="project-arrow" data-project-next aria-label="Proyecto siguiente">›</button>
+          </div>
+        </header>
 
-        <aside class="side-column">
-          <section class="section-card links-section lime-panel" id="enlaces">
-            <header class="section-header compact-header">
-              <div>
-                <h2>Enlaces publicados</h2>
-              </div>
-            </header>
-            <div class="social-grid" data-social-grid aria-live="polite"></div>
-          </section>
-
-          <section class="focus-card violet-grid">
-            <h2>Construir primero.<br>Publicar después.</h2>
-          </section>
-        </aside>
-      </div>
+        <div class="featured-project-stage" data-project-stage aria-live="polite"></div>
+        <div class="featured-project-dots" data-project-dots aria-label="Seleccionar proyecto"></div>
+      </section>
 
       <section class="section-card notes-section" id="notas">
         <header class="section-header">
