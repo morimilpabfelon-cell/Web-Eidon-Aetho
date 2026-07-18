@@ -45,15 +45,13 @@ function setCounters(selector, value) {
   });
 }
 
-function emptyState(title, description) {
+function emptyState(title) {
   const article = document.createElement("article");
   const strong = document.createElement("strong");
-  const paragraph = document.createElement("p");
 
   article.className = "empty-state";
   strong.textContent = title;
-  paragraph.textContent = description;
-  article.append(strong, paragraph);
+  article.append(strong);
   return article;
 }
 
@@ -163,7 +161,7 @@ function renderProjects(items) {
   grid.replaceChildren(
     ...(projects.length
       ? projects.map(projectCard)
-      : [emptyState("Sin proyectos publicados", "Esta sección mostrará los proyectos que decidas publicar.")])
+      : [emptyState("Sin proyectos publicados")])
   );
 }
 
@@ -176,7 +174,7 @@ function renderSocials(items) {
   grid.replaceChildren(
     ...(socials.length
       ? socials.map(socialCard)
-      : [emptyState("Sin enlaces publicados", "Aquí aparecerán únicamente los enlaces que decidas publicar.")])
+      : [emptyState("Sin enlaces publicados")])
   );
 }
 
@@ -189,7 +187,7 @@ function renderNotes(items) {
   grid.replaceChildren(
     ...(notes.length
       ? notes.map(noteCard)
-      : [emptyState("Sin notas publicadas", "Las notas aparecerán aquí cuando decidas hacerlas públicas.")])
+      : [emptyState("Sin notas publicadas")])
   );
 }
 
