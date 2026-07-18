@@ -6,6 +6,11 @@ const DATA_FILES = Object.freeze({
 
 const HERO_IMAGE_FILE = "assets/eidon-cat.webp.b64";
 
+const projectCarousel = {
+  items: [],
+  index: 0
+};
+
 function isSafeUrl(value) {
   if (typeof value !== "string" || value.trim() === "") return false;
 
@@ -15,6 +20,12 @@ function isSafeUrl(value) {
   } catch {
     return false;
   }
+}
+
+function isSafeAssetPath(value) {
+  if (typeof value !== "string") return false;
+  const path = value.trim();
+  return /^(?:\.\/)?assets\/[a-zA-Z0-9/_\-.]+$/.test(path);
 }
 
 function cleanText(value, fallback = "") {
@@ -76,40 +87,77 @@ function emptyState(title) {
   return article;
 }
 
-function projectCard(project, index) {
+function projectInitials(name) {
+  const words = cleanText(name, "Proyecto")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2);
+
+  return words.map((word) => word[0]).join("").toUpperCase() || "EA";
+}
+
+function projectPreview(project) {
+  const media = document.createElement("div");
+  const source = cleanText(project.image);
+
+  media.className = "featured-project-media";
+
+  if (isSafeUrl(source) || isSafeAssetPath(source)) {
+    const image = document.createElement("img");
+    image.src = source;
+    image.alt = cleanText(project.imageAlt, `Vista previa de ${cleanText(project.name, "proyecto")}`);
+    image.loading = "lazy";
+    image.decoding = "async";
+    media.append(image);
+    return media;
+  }
+
+  const placeholder = document.createElement("div");
+  const mark = document.createElement("strong");
+
+  placeholder.className = "project-preview-placeholder";
+  mark.textContent = projectInitials(project.name);
+  placeholder.append(mark);
+  media.append(placeholder);
+  return media;
+}
+
+function projectTag(value) {
+  const tag = document.createElement("span");
+  tag.className = "tag";
+  tag.textContent = value;
+  return tag;
+}
+
+function featuredProjectCard(project, index, total) {
   const article = document.createElement("article");
-  const topline = document.createElement("div");
-  const number = document.createElement("span");
-  const category = document.createElement("span");
+  const copy = document.createElement("div");
+  const meta = document.createElement("div");
+  const category = projectTag(cleanText(project.category, "Proyecto"));
+  const position = projectTag(`${index + 1} / ${total}`);
   const title = document.createElement("h3");
   const description = document.createElement("p");
   const tags = document.createElement("div");
 
-  article.className = `project-card${project.featured === true ? " featured" : ""}`;
-  topline.className = "item-topline";
-  number.className = "item-number";
-  category.className = "tag";
+  article.className = "featured-project-card";
+  copy.className = "featured-project-copy";
+  meta.className = "featured-project-meta";
   tags.className = "tag-list";
 
-  number.textContent = String(index + 1).padStart(2, "0");
-  category.textContent = cleanText(project.category, "Proyecto");
   title.textContent = cleanText(project.name, "Proyecto sin nombre");
   description.textContent = cleanText(project.description, "Sin descripción pública.");
+
+  meta.append(category, position);
 
   if (Array.isArray(project.tags)) {
     project.tags.forEach((value) => {
       const text = cleanText(String(value));
-      if (!text) return;
-      const tag = document.createElement("span");
-      tag.className = "tag";
-      tag.textContent = text;
-      tags.append(tag);
+      if (text) tags.append(projectTag(text));
     });
   }
 
-  topline.append(number, category);
-  article.append(topline, title, description);
-  if (tags.childElementCount > 0) article.append(tags);
+  copy.append(meta, title, description);
+  if (tags.childElementCount > 0) copy.append(tags);
 
   if (isSafeUrl(project.url)) {
     const link = document.createElement("a");
@@ -117,37 +165,83 @@ function projectCard(project, index) {
     link.href = project.url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.textContent = cleanText(project.linkLabel, "Abrir enlace ↗");
-    article.append(link);
+    link.textContent = cleanText(project.linkLabel, "Ver detalles →");
+    copy.append(link);
   }
 
+  article.append(projectPreview(project), copy);
   return article;
 }
 
-function socialCard(item) {
-  const link = document.createElement("a");
-  const icon = document.createElement("span");
-  const copy = document.createElement("span");
-  const name = document.createElement("strong");
-  const description = document.createElement("small");
-  const arrow = document.createElement("b");
+function updateProjectCarousel(nextIndex) {
+  const stage = document.querySelector("[data-project-stage]");
+  const dots = document.querySelector("[data-project-dots]");
+  const previous = document.querySelector("[data-project-prev]");
+  const next = document.querySelector("[data-project-next]");
+  const total = projectCarousel.items.length;
 
-  link.className = "social-card";
-  link.href = item.url;
-  link.target = "_blank";
-  link.rel = "noopener noreferrer";
-  link.setAttribute("aria-label", `${cleanText(item.name, "Enlace")}, abrir en una pestaña nueva`);
+  if (!stage || !dots || !previous || !next || total === 0) return;
 
-  icon.className = "social-icon";
-  icon.textContent = cleanText(item.icon, cleanText(item.name, "+")).slice(0, 3).toUpperCase();
-  name.textContent = cleanText(item.name, "Enlace sin nombre");
-  description.textContent = cleanText(item.description, "Enlace publicado.");
-  arrow.textContent = "↗";
-  arrow.setAttribute("aria-hidden", "true");
+  projectCarousel.index = ((nextIndex % total) + total) % total;
+  stage.replaceChildren(
+    featuredProjectCard(
+      projectCarousel.items[projectCarousel.index],
+      projectCarousel.index,
+      total
+    )
+  );
 
-  copy.append(name, description);
-  link.append(icon, copy, arrow);
-  return link;
+  dots.querySelectorAll(".project-dot").forEach((dot, index) => {
+    const selected = index === projectCarousel.index;
+    dot.setAttribute("aria-current", selected ? "true" : "false");
+    dot.setAttribute("aria-selected", selected ? "true" : "false");
+  });
+
+  previous.disabled = total <= 1;
+  next.disabled = total <= 1;
+}
+
+function renderProjects(items) {
+  const stage = document.querySelector("[data-project-stage]");
+  const dots = document.querySelector("[data-project-dots]");
+  const previous = document.querySelector("[data-project-prev]");
+  const next = document.querySelector("[data-project-next]");
+  if (!stage || !dots || !previous || !next) return;
+
+  const projects = visibleItems(items);
+  setCounters("[data-project-count]", projects.length);
+  projectCarousel.items = projects;
+  projectCarousel.index = 0;
+  dots.replaceChildren();
+
+  if (projects.length === 0) {
+    const empty = document.createElement("article");
+    const title = document.createElement("strong");
+    const copy = document.createElement("span");
+
+    empty.className = "featured-project-empty";
+    title.textContent = "Sin proyectos publicados";
+    copy.textContent = "El carrusel se activará cuando publiques el primer proyecto.";
+    empty.append(title, copy);
+    stage.replaceChildren(empty);
+    previous.disabled = true;
+    next.disabled = true;
+    return;
+  }
+
+  projects.forEach((project, index) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "project-dot";
+    dot.setAttribute("role", "tab");
+    dot.setAttribute("aria-label", `Ver ${cleanText(project.name, `proyecto ${index + 1}`)}`);
+    dot.addEventListener("click", () => updateProjectCarousel(index));
+    dots.append(dot);
+  });
+
+  previous.onclick = () => updateProjectCarousel(projectCarousel.index - 1);
+  next.onclick = () => updateProjectCarousel(projectCarousel.index + 1);
+  updateProjectCarousel(0);
 }
 
 function heroSocialLink(item) {
@@ -191,33 +285,11 @@ function noteCard(note) {
   return article;
 }
 
-function renderProjects(items) {
-  const grid = document.querySelector("[data-project-grid]");
-  if (!grid) return;
-
-  const projects = visibleItems(items);
-  setCounters("[data-project-count]", projects.length);
-  grid.replaceChildren(
-    ...(projects.length
-      ? projects.map(projectCard)
-      : [emptyState("Sin proyectos publicados")])
-  );
-}
-
 function renderSocials(items) {
-  const grid = document.querySelector("[data-social-grid]");
   const hero = document.querySelector("[data-hero-socials]");
   const socials = visibleItems(items).filter((item) => isSafeUrl(item.url));
 
   setCounters("[data-link-count]", socials.length);
-
-  if (grid) {
-    grid.replaceChildren(
-      ...(socials.length
-        ? socials.map(socialCard)
-        : [emptyState("Sin enlaces publicados")])
-    );
-  }
 
   if (hero) {
     hero.replaceChildren(...socials.map(heroSocialLink));
