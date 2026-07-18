@@ -1,6 +1,6 @@
 # Web Eidon Aetho
 
-Centro personal de Eidon Aetho con publicación cerrada por defecto.
+Página personal de Eidon Aetho con publicación cerrada por defecto.
 
 La web no descubre, agrega ni publica proyectos, repositorios, canales, enlaces o anuncios automáticamente. El contenido solo aparece cuando el propietario lo escribe manualmente en los archivos JSON.
 
@@ -16,10 +16,10 @@ No se necesita GitHub Actions.
 
 - `data/projects.json`: proyectos y enlaces opcionales.
 - `data/socials.json`: canales, perfiles u otros enlaces.
-- `data/notes.json`: notas públicas sin enlace obligatorio.
+- `data/notes.json`: notas públicas.
 - `data/ads.json`: anuncios del carrusel horizontal.
 
-Los cuatro archivos empiezan como listas vacías:
+Los archivos que todavía no tienen contenido deben conservar una lista JSON vacía:
 
 ```json
 []
@@ -27,7 +27,7 @@ Los cuatro archivos empiezan como listas vacías:
 
 ## Agregar un proyecto
 
-Edita `data/projects.json` y agrega un objeto como este. La URL queda vacía hasta que el propietario decida escribirla.
+Edita `data/projects.json`:
 
 ```json
 {
@@ -35,11 +35,17 @@ Edita `data/projects.json` y agrega un objeto como este. La URL queda vacía has
   "category": "",
   "description": "",
   "tags": [],
+  "image": "assets/imagen-del-proyecto.webp",
+  "imageAlt": "",
   "url": "",
+  "linkLabel": "Ver detalles →",
+  "featured": true,
   "visible": true,
   "order": 10
 }
 ```
+
+Usa preferentemente imágenes guardadas dentro de `assets/`. Los enlaces externos y las imágenes remotas deben usar HTTPS.
 
 ## Agregar un enlace
 
@@ -73,7 +79,7 @@ Edita `data/notes.json`:
 
 ## Agregar un anuncio
 
-Edita `data/ads.json`. El anuncio solo se muestra cuando la URL es válida y `visible` es `true`.
+Edita `data/ads.json`. El anuncio solo se muestra cuando la URL HTTPS es válida y `visible` es `true`.
 
 ```json
 {
@@ -87,12 +93,13 @@ Edita `data/ads.json`. El anuncio solo se muestra cuando la URL es válida y `vi
 }
 ```
 
-`accent` acepta únicamente colores hexadecimales completos como `#c8f35a`. Los enlaces externos se abren con atributos de seguridad y relación `sponsored`.
+`accent` acepta únicamente colores hexadecimales completos como `#c8f35a`. Los anuncios externos se abren con atributos de seguridad y relación `sponsored`.
 
 ## Reglas de seguridad
 
-- No publiques la URL de un repositorio delicado.
-- No agregues una campaña publicitaria hasta revisar su destino y condiciones.
+- No publiques repositorios, documentos o enlaces delicados.
+- No guardes contraseñas, tokens, llaves privadas ni archivos `.env` en el repositorio.
+- Revisa el destino de cada anuncio antes de publicarlo.
 - Mantén `url` como cadena vacía cuando no quieras crear un enlace.
 - Usa `visible: false` para ocultar un elemento sin borrarlo.
 - Revisa el contenido antes de fusionarlo con `main`.
