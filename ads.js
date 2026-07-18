@@ -121,11 +121,20 @@ function renderAds(ads) {
   const track = document.querySelector("[data-ad-track]");
   if (!viewport || !track) return null;
 
-  const displayedAds = ads.length > 0 ? ads : placeholderAds();
-  const primaryGroup = createAdGroup(displayedAds);
+  const rail = viewport.closest(".ad-rail");
+
+  if (ads.length === 0) {
+    track.replaceChildren();
+    if (rail) rail.hidden = true;
+    return null;
+  }
+
+  if (rail) rail.hidden = false;
+
+  const primaryGroup = createAdGroup(ads);
   track.replaceChildren(primaryGroup);
 
-  return { viewport, track, primaryGroup, displayedAds };
+  return { viewport, track, primaryGroup, displayedAds: ads };
 }
 
 function setupInfiniteAdRail({ viewport, track, primaryGroup, displayedAds }) {
