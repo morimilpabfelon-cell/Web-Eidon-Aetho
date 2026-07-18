@@ -163,7 +163,7 @@ function renderProjects(items) {
   grid.replaceChildren(
     ...(projects.length
       ? projects.map(projectCard)
-      : [emptyState("Sin proyectos publicados", "Los proyectos aparecerán aquí cuando sean publicados.")])
+      : [emptyState("Sin proyectos publicados", "Esta sección mostrará los proyectos que decidas publicar.")])
   );
 }
 
@@ -176,7 +176,7 @@ function renderSocials(items) {
   grid.replaceChildren(
     ...(socials.length
       ? socials.map(socialCard)
-      : [emptyState("Sin enlaces publicados", "Los enlaces seleccionados aparecerán en este panel.")])
+      : [emptyState("Sin enlaces publicados", "Aquí aparecerán únicamente los enlaces que decidas publicar.")])
   );
 }
 
@@ -189,7 +189,7 @@ function renderNotes(items) {
   grid.replaceChildren(
     ...(notes.length
       ? notes.map(noteCard)
-      : [emptyState("Sin notas publicadas", "Las notas públicas aparecerán en esta sección.")])
+      : [emptyState("Sin notas publicadas", "Las notas aparecerán aquí cuando decidas hacerlas públicas.")])
   );
 }
 
