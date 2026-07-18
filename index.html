@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Centro personal de Eidon Aetho. El propietario controla manualmente todo el contenido publicado.">
+  <meta name="description" content="Eidon Aetho: proyectos, enlaces y notas publicados por su propietario.">
   <meta name="theme-color" content="#bfe6cf">
   <meta name="robots" content="index,follow">
-  <title>Eidon Aetho — Centro personal</title>
+  <title>Eidon Aetho — Proyectos y enlaces</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
@@ -14,150 +14,137 @@
 <body>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-  <div class="site-shell">
-    <aside class="sidebar">
-      <section class="brand-card panel mint-panel">
-        <div class="brand-row">
-          <span class="brand-mark" aria-hidden="true">EA</span>
-          <div>
-            <strong>EIDON AETHO</strong>
-            <small>PERSONAL HUB</small>
-          </div>
-        </div>
-        <p>Un espacio visual para publicar únicamente lo que tú decidas.</p>
-      </section>
+  <div class="page-frame">
+    <header class="topbar">
+      <a class="brand" href="#inicio" aria-label="Eidon Aetho, inicio">
+        <span class="brand-mark" aria-hidden="true">EA</span>
+        <span class="brand-copy"><strong>EIDON AETHO</strong><small>PROJECT HUB</small></span>
+      </a>
 
-      <nav class="side-nav panel" aria-label="Navegación principal">
-        <a href="#inicio">Inicio</a>
+      <nav class="top-nav" aria-label="Navegación principal">
         <a href="#proyectos">Proyectos</a>
         <a href="#enlaces">Enlaces</a>
         <a href="#notas">Notas</a>
-        <a href="#control">Control</a>
       </nav>
 
-      <section class="panel control-card" id="control">
-        <p class="kicker">CONTROL DEL CONTENIDO</p>
-        <h2>Tú decides qué aparece.</h2>
-        <p>La página empieza vacía. No busca repositorios, perfiles ni canales.</p>
-        <div class="file-list" aria-label="Archivos editables">
-          <code>data/projects.json</code>
-          <code>data/socials.json</code>
-          <code>data/notes.json</code>
-        </div>
-      </section>
+      <span class="top-status">PUBLICACIÓN SELECTIVA</span>
+    </header>
 
-      <section class="panel violet-panel privacy-card">
-        <p class="kicker">PRIVACIDAD</p>
-        <strong>Cero enlaces automáticos.</strong>
-        <p>Una URL solo se convierte en enlace cuando tú la escribes manualmente.</p>
-      </section>
-    </aside>
-
-    <div class="workspace">
-      <header class="topbar panel">
-        <div class="topbar-brand">
-          <span class="mini-mark">&lt;/&gt;</span>
-          <span>Eidon Aetho</span>
-        </div>
-        <nav aria-label="Navegación secundaria">
-          <a href="#proyectos">Projects</a>
-          <a href="#enlaces">Links</a>
-          <a href="#notas">Notes</a>
+    <div class="page-layout">
+      <aside class="sidebar">
+        <nav class="side-nav" aria-label="Navegación lateral">
+          <a href="#inicio"><span>01</span> Inicio</a>
+          <a href="#proyectos"><span>02</span> Proyectos</a>
+          <a href="#enlaces"><span>03</span> Enlaces</a>
+          <a href="#notas"><span>04</span> Notas</a>
         </nav>
-        <span class="status-badge">CONTROL MANUAL</span>
-      </header>
+
+        <section class="side-card mint-card" aria-label="Resumen de contenido">
+          <p class="eyebrow">PUBLICADO</p>
+          <div class="side-stat"><strong data-project-count>0</strong><span>Proyectos</span></div>
+          <div class="side-stat"><strong data-link-count>0</strong><span>Enlaces</span></div>
+          <div class="side-stat"><strong data-note-count>0</strong><span>Notas</span></div>
+        </section>
+
+        <section class="side-card violet-card">
+          <p class="eyebrow">EIDON AETHO</p>
+          <h2>Un espacio para mostrar trabajo seleccionado.</h2>
+        </section>
+      </aside>
 
       <main id="contenido" class="dashboard">
         <section class="hero panel grid-paper" id="inicio">
           <div class="hero-copy">
-            <p class="hero-label">YOUR SPACE · YOUR CONTROL</p>
-            <h1>TUS PROYECTOS.<br>TUS ENLACES.<br>TUS REGLAS.</h1>
-            <p class="hero-text">La estructura está lista, pero el contenido permanece vacío hasta que tú agregues nombres, descripciones y enlaces.</p>
+            <p class="label-chip">PROYECTOS · ENLACES · NOTAS</p>
+            <h1>TRABAJO<br>PUBLICADO<br>POR EIDON.</h1>
+            <p class="hero-text">Una página personal para presentar proyectos, perfiles y notas cuando estén listos para hacerse públicos.</p>
             <div class="hero-actions">
-              <a class="button lime-button" href="#proyectos">Ver estructura</a>
-              <a class="button light-button" href="#control">Cómo editar</a>
+              <a class="button lime-button" href="#proyectos">Ver proyectos</a>
+              <a class="button white-button" href="#enlaces">Ver enlaces</a>
             </div>
           </div>
 
-          <div class="hero-art pink-panel">
-            <div class="art-frame lime-panel" aria-hidden="true">
-              <div class="abstract-profile">
-                <span>EIDON</span>
-                <small>OWNER CONTROLLED</small>
+          <div class="hero-art pink-card" aria-label="Composición gráfica de Eidon Aetho">
+            <div class="art-window lime-card" aria-hidden="true">
+              <div class="abstract-art">
+                <span class="shape shape-one"></span>
+                <span class="shape shape-two"></span>
+                <span class="shape shape-three"></span>
+                <strong>EA</strong>
               </div>
             </div>
-            <div class="code-card violet-panel" aria-label="Estado inicial del contenido">
-              <code>&gt; published_content = {</code>
-              <code>projects: []</code>
-              <code>links: []</code>
-              <code>notes: []</code>
-              <code>automatic: false</code>
+            <div class="code-card violet-card" aria-hidden="true">
+              <code>&gt; portfolio = {</code>
+              <code>projects: <b data-project-count>0</b>,</code>
+              <code>links: <b data-link-count>0</b>,</code>
+              <code>notes: <b data-note-count>0</b></code>
               <code>}</code>
             </div>
           </div>
         </section>
 
-        <section class="signal-strip panel" aria-label="Principios de la página">
-          <div class="signal-title violet-panel">CONTENT RULES →</div>
-          <div class="signal-items">
-            <span>Vacío por defecto</span>
-            <span>Edición manual</span>
-            <span>Sin descubrimiento</span>
-            <span>Publicación consciente</span>
-          </div>
+        <section class="stats-strip panel" aria-label="Estado del contenido">
+          <div class="strip-title violet-card">CONTENIDO →</div>
+          <div class="strip-stat"><strong data-project-count>0</strong><span>Proyectos</span></div>
+          <div class="strip-stat"><strong data-link-count>0</strong><span>Enlaces</span></div>
+          <div class="strip-stat"><strong data-note-count>0</strong><span>Notas</span></div>
         </section>
 
-        <section class="content-panel panel" id="proyectos">
+        <section class="projects-panel panel" id="proyectos">
           <div class="section-heading">
             <div>
-              <p class="kicker">PROJECTS</p>
+              <p class="eyebrow">FEATURED PROJECTS</p>
               <h2>Proyectos publicados</h2>
             </div>
-            <span class="counter" data-project-count>0</span>
+            <span class="section-number">01</span>
           </div>
           <div class="project-grid" data-project-grid aria-live="polite"></div>
         </section>
 
         <aside class="right-column">
-          <section class="panel lime-panel links-panel" id="enlaces">
+          <section class="links-panel panel lime-card" id="enlaces">
             <div class="section-heading compact-heading">
               <div>
-                <p class="kicker">LINKS</p>
-                <h2>Enlaces elegidos</h2>
+                <p class="eyebrow">SELECTED LINKS</p>
+                <h2>Enlaces publicados</h2>
               </div>
-              <span class="counter" data-link-count>0</span>
+              <span class="section-number">02</span>
             </div>
             <div class="social-grid" data-social-grid aria-live="polite"></div>
           </section>
 
-          <section class="panel violet-panel policy-panel">
-            <p class="kicker">PUBLICATION POLICY</p>
-            <h2>Nada aparece sin tu decisión.</h2>
-            <p>No hay URLs de respaldo ni nombres precargados dentro del código.</p>
+          <section class="quote-panel panel violet-grid">
+            <p class="eyebrow">CURRENT FOCUS</p>
+            <h2>Construir primero. Publicar cuando corresponda.</h2>
           </section>
         </aside>
 
-        <section class="content-panel panel notes-panel" id="notas">
+        <section class="notes-panel panel" id="notas">
           <div class="section-heading">
             <div>
-              <p class="kicker">PUBLIC NOTES</p>
+              <p class="eyebrow">PUBLIC NOTES</p>
               <h2>Notas publicadas</h2>
             </div>
-            <span class="counter" data-note-count>0</span>
+            <span class="section-number">03</span>
           </div>
           <div class="notes-grid" data-note-grid aria-live="polite"></div>
         </section>
 
-        <section class="closing panel violet-grid">
+        <section class="closing-panel panel pink-card">
           <div>
-            <p class="kicker">OWNER FIRST</p>
-            <h2>La página muestra solo lo que tú autorizas.</h2>
-            <p>Agrega contenido en los archivos JSON cuando esté listo para ser público.</p>
+            <p class="eyebrow">EIDON AETHO</p>
+            <h2>La página evoluciona junto con el trabajo publicado.</h2>
           </div>
-          <a class="button lime-button" href="#inicio">Volver arriba</a>
+          <a class="button white-button" href="#inicio">Volver arriba</a>
         </section>
       </main>
     </div>
+
+    <footer class="footer">
+      <strong>&lt;/&gt; EIDON AETHO</strong>
+      <span>Proyectos · Enlaces · Notas</span>
+      <span>© <span data-year></span></span>
+    </footer>
   </div>
 </body>
 </html>
