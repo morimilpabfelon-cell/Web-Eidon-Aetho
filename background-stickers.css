@@ -1,0 +1,66 @@
+/* Fondo exterior negro con stickers originales de Eidon Aetho. */
+html,
+body {
+  background: #050505 !important;
+}
+
+body {
+  position: relative;
+  isolation: isolate;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: max(190px, calc((100vw - 1280px) / 2 + 28px));
+  pointer-events: none;
+  z-index: 0;
+  background-color: #050505;
+  background-image: url("assets/eidon-aetho-stickers.png?v=20260718-1");
+  background-repeat: repeat-y;
+  background-size: 330px auto;
+  opacity: .94;
+}
+
+body::before {
+  left: 0;
+  background-position: center 36px;
+}
+
+body::after {
+  right: 0;
+  background-position: center 260px;
+  transform: scaleX(-1);
+}
+
+.site-shell {
+  position: relative;
+  z-index: 2;
+  box-shadow: 10px 10px 0 rgba(255, 255, 255, .08);
+}
+
+@media (max-width: 1550px) {
+  body::before,
+  body::after {
+    background-size: 270px auto;
+    opacity: .72;
+  }
+}
+
+@media (max-width: 1360px) {
+  body::before,
+  body::after {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    transform: none;
+  }
+}
