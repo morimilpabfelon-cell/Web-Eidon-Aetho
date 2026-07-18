@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "name": "TikTok",
+    "icon": "TT",
+    "description": "@eidonaetho",
+    "url": "https://www.tiktok.com/@eidonaetho?_r=1&_t=ZS-987vjsyzdAe",
+    "visible": true,
+    "order": 1
+  },
+  {
+    "name": "X",
+    "icon": "X",
+    "description": "@Eidon_Morimil",
+    "url": "https://x.com/Eidon_Morimil",
+    "visible": true,
+    "order": 2
+  },
+  {
+    "name": "YouTube",
+    "icon": "YT",
+    "description": "@eidon-aetho",
+    "url": "https://youtube.com/@eidon-aetho?si=d6av7H7R4AjI7bwj",
+    "visible": true,
+    "order": 3
+  }
+]
