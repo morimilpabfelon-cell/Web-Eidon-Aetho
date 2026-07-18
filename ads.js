@@ -120,7 +120,6 @@ function setupInfiniteAdRail({ viewport, track, primaryGroup, displayedAds }) {
   let animationFrame = 0;
   let previousTime = 0;
   let pausedUntil = 0;
-  let isHovered = false;
   let isFocused = false;
   let isDragging = false;
   let dragStartX = 0;
@@ -163,7 +162,6 @@ function setupInfiniteAdRail({ viewport, track, primaryGroup, displayedAds }) {
     const canMove =
       !reducedMotion.matches &&
       !document.hidden &&
-      !isHovered &&
       !isFocused &&
       !isDragging &&
       timestamp >= pausedUntil;
@@ -175,15 +173,6 @@ function setupInfiniteAdRail({ viewport, track, primaryGroup, displayedAds }) {
 
     animationFrame = window.requestAnimationFrame(animate);
   };
-
-  viewport.addEventListener("mouseenter", () => {
-    isHovered = true;
-  });
-
-  viewport.addEventListener("mouseleave", () => {
-    isHovered = false;
-    pauseTemporarily(500);
-  });
 
   viewport.addEventListener("focusin", () => {
     isFocused = true;
