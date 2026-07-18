@@ -1,5 +1,6 @@
 const ADS_FILE = "data/ads.json";
 const AD_SPEED_PX_PER_SECOND = 42;
+const DRAG_THRESHOLD_PX = 7;
 
 function isSafeAdUrl(value) {
   if (typeof value !== "string" || value.trim() === "") return false;
@@ -22,6 +23,11 @@ function safeAccent(value, fallback = "#c8f35a") {
     : fallback;
 }
 
+function safeBrand(value) {
+  const brand = adText(value, "generic").toLowerCase();
+  return /^[a-z0-9-]+$/.test(brand) ? brand : "generic";
+}
+
 async function loadAds() {
   try {
     const response = await fetch(ADS_FILE, { cache: "no-store" });
@@ -42,12 +48,12 @@ async function loadAds() {
 
 function placeholderAds() {
   return [
-    { label: "AD 01", title: "Espacio publicitario", description: "Disponible para patrocinio.", accent: "#c8f35a", placeholder: true },
-    { label: "AD 02", title: "Tu anuncio aquí", description: "Contenido definido únicamente por el propietario.", accent: "#f58ab1", placeholder: true },
-    { label: "AD 03", title: "Sponsor disponible", description: "Franja preparada para campañas futuras.", accent: "#7357f2", placeholder: true },
-    { label: "AD 04", title: "Espacio promocional", description: "Sin marcas ni enlaces precargados.", accent: "#ff6a00", placeholder: true },
-    { label: "AD 05", title: "Campaña disponible", description: "Lugar reservado para publicidad futura.", accent: "#69b8e8", placeholder: true },
-    { label: "AD 06", title: "Anuncio disponible", description: "El propietario decide qué se publica.", accent: "#f1a083", placeholder: true }
+    { label: "AD 01", title: "Espacio publicitario", description: "Disponible para patrocinio.", accent: "#c8f35a", brand: "generic", logoText: "EA", placeholder: true },
+    { label: "AD 02", title: "Tu anuncio aquí", description: "Contenido definido únicamente por el propietario.", accent: "#f58ab1", brand: "generic", logoText: "AD", placeholder: true },
+    { label: "AD 03", title: "Sponsor disponible", description: "Franja preparada para campañas futuras.", accent: "#7357f2", brand: "generic", logoText: "SP", placeholder: true },
+    { label: "AD 04", title: "Espacio promocional", description: "Sin marcas ni enlaces precargados.", accent: "#ff6a00", brand: "generic", logoText: "PR", placeholder: true },
+    { label: "AD 05", title: "Campaña disponible", description: "Lugar reservado para publicidad futura.", accent: "#69b8e8", brand: "generic", logoText: "CP", placeholder: true },
+    { label: "AD 06", title: "Anuncio disponible", description: "El propietario decide qué se publica.", accent: "#f1a083", brand: "generic", logoText: "AN", placeholder: true }
   ];
 }
 
@@ -55,16 +61,23 @@ function createAdCard(ad, index) {
   const hasUrl = isSafeAdUrl(ad.url) && ad.placeholder !== true;
   const card = document.createElement(hasUrl ? "a" : "article");
   const badge = document.createElement("span");
+  const logo = document.createElement("span");
   const copy = document.createElement("span");
   const title = document.createElement("h3");
   const description = document.createElement("p");
   const arrow = document.createElement("span");
 
   card.className = `ad-card${ad.placeholder === true ? " ad-placeholder" : ""}`;
+  card.dataset.brand = safeBrand(ad.brand);
   card.style.setProperty("--ad-accent", safeAccent(ad.accent));
+  card.draggable = false;
 
   badge.className = "ad-badge";
   badge.textContent = adText(ad.label, `AD ${String(index + 1).padStart(2, "0")}`);
+
+  logo.className = "ad-logo";
+  logo.textContent = adText(ad.logoText, adText(ad.title, "AD")).slice(0, 2).toUpperCase();
+  logo.setAttribute("aria-hidden", "true");
 
   copy.className = "ad-card-copy";
   title.textContent = adText(ad.title, "Anuncio sin título");
@@ -82,7 +95,7 @@ function createAdCard(ad, index) {
     card.setAttribute("aria-label", `${title.textContent}, anuncio; abrir en una pestaña nueva`);
   }
 
-  card.append(badge, copy, arrow);
+  card.append(badge, logo, copy, arrow);
   return card;
 }
 
@@ -122,8 +135,11 @@ function setupInfiniteAdRail({ viewport, track, primaryGroup, displayedAds }) {
   let pausedUntil = 0;
   let isFocused = false;
   let isDragging = false;
+  let hasDragged = false;
   let dragStartX = 0;
   let dragStartScroll = 0;
+  let draggingPointerId = null;
+  let blockNextClick = false;
 
   const loopWidth = () => primaryGroup.getBoundingClientRect().width;
 
@@ -187,34 +203,63 @@ function setupInfiniteAdRail({ viewport, track, primaryGroup, displayedAds }) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
 
     isDragging = true;
+    hasDragged = false;
+    draggingPointerId = event.pointerId;
     dragStartX = event.clientX;
     dragStartScroll = viewport.scrollLeft;
-    viewport.classList.add("is-dragging");
-    viewport.setPointerCapture?.(event.pointerId);
     pauseTemporarily(5000);
   });
 
   viewport.addEventListener("pointermove", (event) => {
-    if (!isDragging) return;
+    if (!isDragging || event.pointerId !== draggingPointerId) return;
 
-    viewport.scrollLeft = dragStartScroll - (event.clientX - dragStartX);
+    const distance = event.clientX - dragStartX;
+    if (!hasDragged && Math.abs(distance) < DRAG_THRESHOLD_PX) return;
+
+    if (!hasDragged) {
+      hasDragged = true;
+      viewport.classList.add("is-dragging");
+      viewport.setPointerCapture?.(event.pointerId);
+    }
+
+    viewport.scrollLeft = dragStartScroll - distance;
     normalizePosition();
     event.preventDefault();
   });
 
   const stopDragging = (event) => {
-    if (!isDragging) return;
+    if (!isDragging || event.pointerId !== draggingPointerId) return;
 
+    blockNextClick = hasDragged;
     isDragging = false;
+    hasDragged = false;
+    draggingPointerId = null;
     viewport.classList.remove("is-dragging");
+
     if (viewport.hasPointerCapture?.(event.pointerId)) {
       viewport.releasePointerCapture(event.pointerId);
     }
+
     pauseTemporarily();
+
+    window.setTimeout(() => {
+      blockNextClick = false;
+    }, 0);
   };
 
   viewport.addEventListener("pointerup", stopDragging);
   viewport.addEventListener("pointercancel", stopDragging);
+
+  viewport.addEventListener("click", (event) => {
+    if (!blockNextClick) return;
+    event.preventDefault();
+    event.stopPropagation();
+    blockNextClick = false;
+  });
+
+  viewport.addEventListener("dragstart", (event) => {
+    event.preventDefault();
+  });
 
   viewport.addEventListener(
     "wheel",
