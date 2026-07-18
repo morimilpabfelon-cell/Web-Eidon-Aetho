@@ -77,8 +77,7 @@
   gap: 14px;
   padding: 14px 18px;
   border-right: var(--border);
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--ad-accent) 30%, var(--paper)) 0 34%, var(--paper) 34% 100%);
+  background: linear-gradient(135deg, var(--ad-accent) 0 28%, var(--paper) 28% 100%);
 }
 
 .ad-card[href] { transition: background 140ms ease, transform 140ms ease; }
