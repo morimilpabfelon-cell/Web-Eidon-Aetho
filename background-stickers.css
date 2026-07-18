@@ -1,0 +1,251 @@
+/* Fondo exterior negro con stickers originales de Eidon Aetho. */
+html,
+body {
+  background: #050505 !important;
+}
+
+body {
+  position: relative;
+  isolation: isolate;
+  overflow-x: hidden;
+}
+
+.background-stickers {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #050505;
+}
+
+.site-shell {
+  position: relative;
+  z-index: 2;
+  box-shadow: 10px 10px 0 rgba(255, 255, 255, .08);
+}
+
+.bg-sticker {
+  position: absolute;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 14px;
+  color: #050505;
+  border: 4px solid #050505;
+  box-shadow: 7px 7px 0 #050505, 0 0 0 2px rgba(255, 255, 255, .1);
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -.04em;
+}
+
+.sticker-title {
+  font-size: 1.45rem;
+  line-height: .9;
+}
+
+.sticker-node {
+  top: 86px;
+  left: 42px;
+  width: 190px;
+  min-height: 190px;
+  background: #b9ff18;
+  transform: rotate(-4deg);
+}
+
+.sticker-seal {
+  top: 350px;
+  left: 52px;
+  width: 176px;
+  height: 176px;
+  place-items: center;
+  border-radius: 50%;
+  background: #bbb4ff;
+  transform: rotate(5deg);
+}
+
+.sticker-seal::before,
+.sticker-seal::after {
+  content: "";
+  position: absolute;
+  border: 3px solid #050505;
+  border-radius: 50%;
+}
+
+.sticker-seal::before { inset: 11px; }
+.sticker-seal::after { inset: 25px; }
+
+.seal-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 110px;
+  font-size: .72rem;
+  line-height: 1.1;
+  text-align: center;
+  letter-spacing: .12em;
+}
+
+.seal-spiral {
+  position: relative;
+  z-index: 2;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(#050505 0 12deg, transparent 12deg 25deg);
+  mask: radial-gradient(circle, transparent 0 18%, #000 20% 66%, transparent 68%);
+}
+
+.sticker-void {
+  top: 600px;
+  left: 92px;
+  width: 132px;
+  min-height: 116px;
+  place-items: center;
+  background: #f1eadc;
+  transform: rotate(-3deg);
+}
+
+.sticker-void strong {
+  font-size: 1.1rem;
+}
+
+.sticker-signal {
+  top: 80px;
+  right: 52px;
+  width: 158px;
+  min-height: 292px;
+  background: #bbb4ff;
+  transform: rotate(4deg);
+}
+
+.sticker-trace {
+  top: 414px;
+  right: 32px;
+  width: 242px;
+  min-height: 160px;
+  background: #ff5a0a;
+  transform: rotate(-3deg);
+}
+
+.sticker-field {
+  top: 632px;
+  right: 78px;
+  width: 190px;
+  min-height: 120px;
+  background: #b9ff18;
+  clip-path: polygon(0 0, 88% 0, 100% 25%, 100% 100%, 0 100%);
+  transform: rotate(4deg);
+}
+
+.sticker-sprite-left,
+.sticker-sprite-right {
+  width: 86px;
+  height: 86px;
+  place-items: center;
+  padding: 8px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.sticker-sprite-left {
+  left: 172px;
+  top: 790px;
+  transform: rotate(-8deg);
+}
+
+.sticker-sprite-right {
+  right: 188px;
+  top: 790px;
+  transform: rotate(7deg);
+}
+
+.symbol-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.pixel-crow,
+.pixel-mask,
+.pixel-eye,
+.pixel-sprite {
+  display: block;
+  background: #050505;
+}
+
+.pixel-crow {
+  width: 112px;
+  height: 94px;
+  margin: 4px auto 0;
+  clip-path: polygon(5% 35%, 20% 35%, 20% 25%, 48% 25%, 61% 34%, 82% 38%, 96% 48%, 80% 55%, 72% 76%, 62% 70%, 53% 82%, 46% 70%, 34% 84%, 30% 61%, 18% 58%, 18% 48%, 5% 48%);
+}
+
+.pixel-mask {
+  width: 92px;
+  height: 130px;
+  margin: 16px auto 0;
+  clip-path: polygon(14% 0, 50% 22%, 86% 0, 100% 20%, 88% 78%, 50% 100%, 12% 78%, 0 20%, 18% 32%, 30% 64%, 50% 76%, 70% 64%, 82% 32%);
+}
+
+.pixel-eye {
+  position: relative;
+  width: 78px;
+  height: 46px;
+  clip-path: polygon(0 50%, 20% 20%, 50% 0, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%);
+}
+
+.pixel-eye::after {
+  content: "";
+  position: absolute;
+  inset: 13px 29px;
+  background: #f1eadc;
+}
+
+.pixel-sprite {
+  position: relative;
+  width: 70px;
+  height: 64px;
+  clip-path: polygon(18% 0, 38% 12%, 62% 12%, 82% 0, 100% 24%, 92% 78%, 70% 100%, 30% 100%, 8% 78%, 0 24%);
+}
+
+.pixel-sprite::before,
+.pixel-sprite::after {
+  content: "";
+  position: absolute;
+  top: 25px;
+  width: 10px;
+  height: 10px;
+  background: #ff5a0a;
+}
+
+.pixel-sprite::before { left: 18px; }
+.pixel-sprite::after { right: 18px; }
+
+.checker-line {
+  height: 16px;
+  margin-top: 4px;
+  background: repeating-linear-gradient(90deg, #050505 0 12px, transparent 12px 24px);
+}
+
+@media (max-width: 1680px) {
+  .bg-sticker { opacity: .82; }
+  .sticker-node { left: 18px; width: 160px; }
+  .sticker-seal { left: 22px; width: 150px; height: 150px; }
+  .sticker-void { left: 42px; }
+  .sticker-signal { right: 20px; width: 140px; }
+  .sticker-trace { right: 12px; width: 200px; }
+  .sticker-field { right: 28px; width: 168px; }
+}
+
+@media (max-width: 1420px) {
+  .background-stickers {
+    background: #050505;
+  }
+
+  .bg-sticker {
+    display: none;
+  }
+}
