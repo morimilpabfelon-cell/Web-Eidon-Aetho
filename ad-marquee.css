@@ -46,81 +46,48 @@
 
 .ad-card {
   --ad-accent: var(--lime);
-  --ad-surface: var(--paper);
-  width: clamp(330px, 34vw, 470px);
-  min-height: 118px;
-  position: relative;
-  overflow: hidden;
+  width: clamp(270px, 29vw, 400px);
+  min-height: 94px;
   display: grid;
-  grid-template-columns: auto 58px minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 12px;
-  padding: 13px 16px;
+  gap: 14px;
+  padding: 14px 18px;
   border-right: var(--border);
-  background: var(--ad-surface);
-  color: var(--ink);
-  isolation: isolate;
-}
-
-.ad-card::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
+  background: linear-gradient(135deg, var(--ad-accent) 0 28%, var(--paper) 28% 100%);
 }
 
 .ad-card[href] {
   cursor: pointer;
-  transition: transform 140ms ease, filter 140ms ease;
+  transition: background 140ms ease, transform 140ms ease;
 }
 
 .ad-card[href]:hover,
 .ad-card[href]:focus-visible {
-  transform: translateY(-2px);
-  filter: saturate(1.12) contrast(1.04);
-}
-
-.ad-badge,
-.ad-logo,
-.ad-card-copy,
-.ad-arrow {
-  position: relative;
-  z-index: 1;
-}
-
-.ad-badge {
-  min-width: 52px;
-  padding: 7px 8px;
-  border: 3px solid var(--ink);
   background: var(--ad-accent);
-  font-size: .64rem;
-  font-weight: 900;
-  line-height: 1.05;
-  text-align: center;
-  text-transform: uppercase;
+  transform: translateY(-2px);
 }
 
 .ad-logo {
-  width: 58px;
-  height: 58px;
-  display: grid;
-  place-items: center;
-  border: 4px solid var(--ink);
-  background: var(--ad-accent);
-  box-shadow: 4px 4px 0 var(--ink);
-  font-family: Impact, "Arial Black", sans-serif;
-  font-size: 1.55rem;
-  line-height: 1;
-  letter-spacing: -.05em;
+  display: none;
 }
 
 .ad-card-copy {
   min-width: 0;
   display: grid;
   gap: 5px;
-  padding: 9px 11px;
+}
+
+.ad-badge {
+  min-width: 54px;
+  padding: 8px 9px;
   border: 3px solid var(--ink);
-  background: rgb(248 241 223 / 92%);
+  background: var(--ad-accent);
+  font-size: .68rem;
+  font-weight: 900;
+  line-height: 1.05;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .ad-card h3 {
@@ -134,136 +101,14 @@
 .ad-card p {
   margin: 0;
   color: var(--muted);
-  font-size: .74rem;
+  font-size: .76rem;
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
 .ad-arrow {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border: 3px solid var(--ink);
-  background: var(--white);
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 900;
-}
-
-.ad-card[data-brand="kinsta"] {
-  --ad-surface: linear-gradient(128deg, #5333ed 0 24%, #d8d0ff 24% 62%, #f8f1df 62% 100%);
-}
-
-.ad-card[data-brand="kinsta"] .ad-logo {
-  border-radius: 50% 42% 54% 46%;
-  background: #5333ed;
-  color: #fff;
-  transform: rotate(-7deg);
-}
-
-.ad-card[data-brand="kinsta"]::after {
-  width: 120px;
-  height: 120px;
-  right: -48px;
-  top: -58px;
-  border: 18px solid rgb(83 51 237 / 38%);
-  border-radius: 50%;
-}
-
-.ad-card[data-brand="semrush"] {
-  --ad-surface: radial-gradient(circle at 14% 50%, #fff 0 10%, transparent 10.5%), linear-gradient(100deg, #ff642d 0 32%, #ffc2a8 32% 58%, #f8f1df 58% 100%);
-}
-
-.ad-card[data-brand="semrush"] .ad-logo {
-  border-radius: 50%;
-  background: #ff642d;
-  color: #fff;
-}
-
-.ad-card[data-brand="semrush"]::after {
-  width: 92px;
-  height: 92px;
-  left: 115px;
-  bottom: -60px;
-  border: 14px solid rgb(255 255 255 / 64%);
-  border-radius: 50%;
-}
-
-.ad-card[data-brand="hubspot"] {
-  --ad-surface: radial-gradient(circle, rgb(17 17 17 / 18%) 0 2px, transparent 2.5px) 0 0 / 18px 18px, linear-gradient(90deg, #ff7a59 0 38%, #ffd0c4 38% 66%, #f8f1df 66% 100%);
-}
-
-.ad-card[data-brand="hubspot"] .ad-logo {
-  background: #ff7a59;
-  color: #111;
-  transform: rotate(5deg);
-}
-
-.ad-card[data-brand="hubspot"]::after {
-  width: 78px;
-  height: 78px;
-  right: 20px;
-  bottom: -50px;
-  border: 4px solid #111;
-  border-radius: 50%;
-}
-
-.ad-card[data-brand="nordvpn"] {
-  --ad-surface: linear-gradient(150deg, #dbe7ff 0 34%, #4687ff 34% 58%, #98bbff 58% 72%, #f8f1df 72% 100%);
-}
-
-.ad-card[data-brand="nordvpn"] .ad-logo {
-  background: #4687ff;
-  color: #fff;
-  clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%);
-}
-
-.ad-card[data-brand="nordvpn"]::after {
-  width: 0;
-  height: 0;
-  left: 112px;
-  bottom: 0;
-  border-left: 70px solid transparent;
-  border-right: 70px solid transparent;
-  border-bottom: 90px solid rgb(255 255 255 / 52%);
-}
-
-.ad-card[data-brand="fiverr"] {
-  --ad-surface: repeating-linear-gradient(45deg, #1dbf73 0 18px, #8ee4bb 18px 36px, #f8f1df 36px 54px);
-}
-
-.ad-card[data-brand="fiverr"] .ad-logo {
-  border-radius: 50%;
-  background: #1dbf73;
-  color: #111;
-}
-
-.ad-card[data-brand="fiverr"]::after {
-  width: 118px;
-  height: 118px;
-  right: -44px;
-  top: -48px;
-  background: radial-gradient(circle, #111 0 4px, transparent 4.5px) 0 0 / 18px 18px;
-  opacity: .45;
-}
-
-.ad-card[data-brand="elementor"] {
-  --ad-surface: linear-gradient(90deg, #92003b 0 18%, #ff6ca8 18% 36%, #f8f1df 36% 62%, #f3b0cb 62% 82%, #92003b 82% 100%);
-}
-
-.ad-card[data-brand="elementor"] .ad-logo {
-  background: #92003b;
-  color: #fff;
-  border-radius: 4px;
-}
-
-.ad-card[data-brand="elementor"]::after {
-  width: 82px;
-  height: 82px;
-  right: 28px;
-  top: 18px;
-  border-left: 18px solid rgb(255 255 255 / 68%);
-  border-right: 18px solid rgb(255 255 255 / 68%);
 }
 
 .ad-placeholder {
@@ -276,34 +121,6 @@
 
 @media (max-width: 760px) {
   .ad-card {
-    width: min(92vw, 420px);
-    grid-template-columns: auto 50px minmax(0, 1fr) auto;
-    gap: 9px;
-    padding: 11px 12px;
-  }
-
-  .ad-logo {
-    width: 50px;
-    height: 50px;
-    font-size: 1.3rem;
-  }
-
-  .ad-card-copy {
-    padding: 8px 9px;
-  }
-
-  .ad-card p {
-    font-size: .7rem;
-  }
-}
-
-@media (max-width: 430px) {
-  .ad-card {
-    width: 94vw;
-    grid-template-columns: 48px minmax(0, 1fr) auto;
-  }
-
-  .ad-badge {
-    display: none;
+    width: min(82vw, 360px);
   }
 }
