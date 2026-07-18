@@ -2,7 +2,7 @@
 
 Centro personal de Eidon Aetho con publicación cerrada por defecto.
 
-La web no descubre, agrega ni publica proyectos, repositorios, canales o enlaces automáticamente. El contenido solo aparece cuando el propietario lo escribe manualmente en los archivos JSON.
+La web no descubre, agrega ni publica proyectos, repositorios, canales, enlaces o anuncios automáticamente. El contenido solo aparece cuando el propietario lo escribe manualmente en los archivos JSON.
 
 ## Publicación con GitHub Pages
 
@@ -17,8 +17,9 @@ No se necesita GitHub Actions.
 - `data/projects.json`: proyectos y enlaces opcionales.
 - `data/socials.json`: canales, perfiles u otros enlaces.
 - `data/notes.json`: notas públicas sin enlace obligatorio.
+- `data/ads.json`: anuncios del carrusel horizontal.
 
-Los tres archivos empiezan como listas vacías:
+Los cuatro archivos empiezan como listas vacías:
 
 ```json
 []
@@ -70,9 +71,28 @@ Edita `data/notes.json`:
 }
 ```
 
+## Agregar un anuncio
+
+Edita `data/ads.json`. El anuncio solo se muestra cuando la URL es válida y `visible` es `true`.
+
+```json
+{
+  "label": "AD 01",
+  "title": "",
+  "description": "",
+  "accent": "#c8f35a",
+  "url": "",
+  "visible": true,
+  "order": 10
+}
+```
+
+`accent` acepta únicamente colores hexadecimales completos como `#c8f35a`. Los enlaces externos se abren con atributos de seguridad y relación `sponsored`.
+
 ## Reglas de seguridad
 
 - No publiques la URL de un repositorio delicado.
+- No agregues una campaña publicitaria hasta revisar su destino y condiciones.
 - Mantén `url` como cadena vacía cuando no quieras crear un enlace.
 - Usa `visible: false` para ocultar un elemento sin borrarlo.
 - Revisa el contenido antes de fusionarlo con `main`.
