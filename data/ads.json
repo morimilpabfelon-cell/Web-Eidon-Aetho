@@ -1,6 +1,8 @@
 [
   {
     "label": "AD 01",
+    "brand": "kinsta",
+    "logoText": "K",
     "title": "Kinsta",
     "description": "Hosting administrado para proyectos WordPress de alto rendimiento.",
     "accent": "#5333ed",
@@ -10,6 +12,8 @@
   },
   {
     "label": "AD 02",
+    "brand": "semrush",
+    "logoText": "S",
     "title": "Semrush",
     "description": "Herramientas de SEO, contenido, tráfico y visibilidad con IA.",
     "accent": "#ff642d",
@@ -19,6 +23,8 @@
   },
   {
     "label": "AD 03",
+    "brand": "hubspot",
+    "logoText": "H",
     "title": "HubSpot",
     "description": "CRM y herramientas para marketing, ventas y servicio al cliente.",
     "accent": "#ff7a59",
@@ -28,6 +34,8 @@
   },
   {
     "label": "AD 04",
+    "brand": "nordvpn",
+    "logoText": "N",
     "title": "NordVPN",
     "description": "Privacidad y protección para conexiones en múltiples dispositivos.",
     "accent": "#4687ff",
@@ -37,6 +45,8 @@
   },
   {
     "label": "AD 05",
+    "brand": "fiverr",
+    "logoText": "F",
     "title": "Fiverr Pro",
     "description": "Talento profesional verificado para proyectos digitales y empresariales.",
     "accent": "#1dbf73",
@@ -46,6 +56,8 @@
   },
   {
     "label": "AD 06",
+    "brand": "elementor",
+    "logoText": "E",
     "title": "Elementor",
     "description": "Constructor visual para crear y gestionar sitios WordPress.",
     "accent": "#92003b",
