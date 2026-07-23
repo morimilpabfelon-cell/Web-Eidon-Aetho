@@ -32,46 +32,14 @@
   overflow-wrap: anywhere;
 }
 
-.hero-nav {
-  width: min(100%, 670px);
-  min-height: 48px;
-  display: flex;
-  align-items: stretch;
-  margin-top: 22px;
-  border: var(--border);
-  background: var(--violet);
-  color: var(--white);
-  box-shadow: 4px 4px 0 var(--ink);
-  font-family: "Courier New", monospace;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.hero-nav a {
-  min-width: 0;
-  min-height: 44px;
-  flex: 1 1 0;
-  display: grid;
-  place-items: center;
-  padding: 8px 12px;
-  letter-spacing: .06em;
-  line-height: 1.15;
-  text-align: center;
-  transition: background-color 120ms ease, color 120ms ease;
-}
-
-.hero-nav a:hover,
-.hero-nav a:focus-visible {
-  background: var(--white);
-  color: var(--ink);
-}
-
-.hero-nav__separator {
-  display: grid;
-  place-items: center;
-  padding-inline: 4px;
-  font-size: 1.1rem;
-  font-weight: 900;
+.identity-only {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (max-width: 560px) {
@@ -80,26 +48,5 @@
     padding: 11px 16px;
     font-size: .86rem;
     letter-spacing: .14em;
-  }
-
-  .hero-nav {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
-    margin-inline: auto;
-  }
-
-  .hero-nav a:not(:first-child) {
-    border-top: 3px solid var(--ink);
-  }
-
-  .hero-nav__separator {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-nav a {
-    transition: none;
   }
 }
