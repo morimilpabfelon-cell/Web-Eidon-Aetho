@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import difflib
 import hashlib
 import json
 import re
@@ -341,6 +342,14 @@ def main() -> int:
                 "ERROR: index.html está desactualizado. Ejecuta python scripts/prerender.py.",
                 file=sys.stderr,
             )
+            diff = difflib.unified_diff(
+                current.splitlines(),
+                expected.splitlines(),
+                fromfile="index.html",
+                tofile="index.html esperado",
+                lineterm="",
+            )
+            print("\n".join(diff), file=sys.stderr)
             return 1
         print("Contenido estático actualizado.")
         return 0
