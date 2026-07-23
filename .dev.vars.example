@@ -1,4 +1,7 @@
 # Solo para desarrollo local. Copia este archivo como .dev.vars.
 # Nunca publiques valores reales en GitHub.
-TELEGRAM_BOT_TOKEN=REPLACE_WITH_BOT_TOKEN
-TELEGRAM_WEBHOOK_SECRET=REPLACE_WITH_RANDOM_SECRET
+YOUTUBE_API_KEY=REPLACE_WITH_YOUTUBE_API_KEY
+YOUTUBE_CHANNEL_ID=REPLACE_WITH_CHANNEL_ID
+# Opcional: evita consultar channels.list en cada caché fría.
+YOUTUBE_UPLOADS_PLAYLIST_ID=REPLACE_WITH_UPLOADS_PLAYLIST_ID
+YOUTUBE_CHANNEL_URL=https://www.youtube.com/@eidon-aetho
