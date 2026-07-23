@@ -1,0 +1,48 @@
+name: Reference checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reference-checks:
+    name: reference-checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate Python
+        run: python -m py_compile scripts/prerender.py
+
+      - name: Validate JavaScript
+        run: |
+          node --check app.js
+          node --check ads.js
+
+      - name: Validate JSON documents
+        shell: bash
+        run: |
+          for file in data/*.json; do
+            python -m json.tool "$file" > /dev/null
+          done
+
+      - name: Verify generated HTML
+        run: python scripts/prerender.py --check
