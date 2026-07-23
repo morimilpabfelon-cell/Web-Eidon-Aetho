@@ -60,6 +60,14 @@
   box-shadow: 6px 6px 0 var(--ink);
 }
 
+.hero-lede {
+  max-width: 46ch;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: clamp(.95rem, .9rem + .3vw, 1.08rem);
+  line-height: 1.55;
+}
+
 .hero-visual {
   padding: 30px 30px 36px;
   background: #0833a2ff;
@@ -93,6 +101,11 @@
 @media (max-width: 560px) {
   .hero-socials {
     justify-content: center;
+  }
+
+  .hero-lede {
+    margin-inline: auto;
+    text-align: center;
   }
 
   .hero-visual {
