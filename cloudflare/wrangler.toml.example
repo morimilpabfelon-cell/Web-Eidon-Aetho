@@ -1,0 +1,12 @@
+name = "web-eidon-aetho"
+compatibility_date = "2026-07-23"
+pages_build_output_dir = "."
+
+[vars]
+YOUTUBE_CHANNEL_ID = "REPLACE_WITH_CHANNEL_ID"
+YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@eidon-aetho"
+# Opcional: lista de subidas del canal.
+# YOUTUBE_UPLOADS_PLAYLIST_ID = "REPLACE_WITH_UPLOADS_PLAYLIST_ID"
+
+# YOUTUBE_API_KEY debe configurarse como secreto en Cloudflare
+# o dentro de .dev.vars para desarrollo local. Nunca lo publiques aquí.

@@ -35,14 +35,19 @@ jobs:
           python -m py_compile scripts/validate_static.py
 
       - name: Validate JavaScript
+        shell: bash
         run: |
           node --check app.js
           node --check ads.js
+          node --check youtube-feed.v1.js
+          while IFS= read -r -d '' file; do
+            node --check "$file"
+          done < <(find functions -type f -name '*.js' -print0)
 
       - name: Validate JSON documents
         shell: bash
         run: |
-          for file in data/*.json; do
+          for file in data/*.json _routes.json; do
             python -m json.tool "$file" > /dev/null
           done
 

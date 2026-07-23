@@ -28,7 +28,7 @@
     "icon": "TG",
     "description": "@eidonaetho",
     "url": "https://t.me/eidonaetho",
-    "visible": true,
+    "visible": false,
     "order": 4
   }
 ]

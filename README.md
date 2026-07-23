@@ -1,16 +1,29 @@
 # Web Eidon Aetho
 
-Página personal estática de Eidon Aetho. El contenido se publica únicamente desde los archivos JSON del repositorio; la web no descubre ni agrega proyectos, enlaces, notas o anuncios automáticamente.
+Página personal estática de Eidon Aetho. El contenido público se mantiene en archivos del repositorio y, cuando la web se despliegue en Cloudflare Pages, podrá complementar la sección de publicaciones con los videos públicos del canal oficial de YouTube.
 
-## Publicación
+## Publicación actual
 
-GitHub Pages debe usar:
+GitHub Pages usa:
 
 - Source: `Deploy from a branch`
 - Branch: `main`
 - Folder: `/ (root)`
 
-No se necesita un workflow de despliegue. El workflow del repositorio solo valida cambios.
+No se necesita un workflow de despliegue. El workflow del repositorio valida los cambios.
+
+## Publicación futura en Cloudflare Pages
+
+El repositorio puede mantenerse privado mientras la web permanece pública. Cloudflare Pages accede al repositorio mediante la aplicación autorizada de GitHub y despliega automáticamente la rama `main`.
+
+La preparación de Cloudflare se documenta en `cloudflare/README.md`.
+
+La integración prevista usa:
+
+- un enlace destacado al perfil oficial de X;
+- una Pages Function del mismo dominio para consultar los videos públicos del canal de YouTube;
+- una clave de YouTube guardada únicamente como secreto en Cloudflare;
+- paginación para recorrer todos los videos públicos sin copiar archivos ni alojar multimedia propia.
 
 ## Estructura
 
@@ -19,19 +32,25 @@ assets/                  imágenes y recursos locales
 data/
   projects.json          proyectos publicados
   socials.json           enlaces oficiales
-  notes.json             notas públicas
+  notes.json             respaldo estático de notas
   ads.json               anuncios patrocinados
+functions/api/
+  youtube.js             consulta pública del canal de YouTube en Cloudflare Pages
+cloudflare/
+  README.md               guía de despliegue privado → público
 scripts/
-  prerender.py           genera HTML estático, JSON-LD y hashes de caché
-  validate_static.py     valida HTML, CSP, sitemap, robots y página 404
+  prerender.py            genera HTML estático, JSON-LD y hashes de caché
+  validate_static.py      valida HTML, CSP, sitemap, robots y página 404
 .github/workflows/
-  reference-checks.yml   controles obligatorios del repositorio
+  reference-checks.yml    controles obligatorios del repositorio
 404.html                  página para rutas inexistentes
 sitemap.xml               URL indexable del sitio
 robots.txt                reglas de rastreo y referencia al sitemap
-app.js                    proyectos, enlaces y notas
+app.js                    proyectos y enlaces actuales
+youtube-feed.v1.js        galería progresiva de YouTube
+youtube-feed.v1.css       diseño de X y YouTube
 ads.js                    carrusel de anuncios
-index.html                documento publicado por GitHub Pages
+index.html                documento publicado
 ```
 
 ## Contrato de contenido
@@ -85,7 +104,7 @@ Ejemplo para `data/socials.json`:
 
 Los enlaces visibles se generan dentro del hero y también alimentan `sameAs` en el JSON-LD. Si la carga dinámica falla, el HTML conserva esos enlaces estáticos.
 
-## Nota
+## Nota estática de respaldo
 
 Ejemplo para `data/notes.json`:
 
@@ -120,20 +139,11 @@ Ejemplo para `data/ads.json`:
 
 ## Generación estática
 
-`projects.json`, `socials.json` y `notes.json` son la fuente de verdad. Después de editarlos, ejecuta:
+Después de editar los archivos de `data/`, ejecuta:
 
 ```powershell
 python scripts/prerender.py
 ```
-
-El script actualiza:
-
-- enlaces sociales estáticos del hero;
-- contador de enlaces;
-- fallback HTML de proyectos y notas;
-- JSON-LD `Person` y su lista `sameAs`;
-- hash CSP que autoriza únicamente ese JSON-LD inline;
-- versiones de caché de `app.js`, `ads.js`, `ad-marquee.css` y `hero-profile.css`.
 
 Para comprobar que el repositorio está actualizado sin modificar archivos:
 
@@ -150,6 +160,8 @@ python scripts/prerender.py --check
 python scripts/validate_static.py
 node --check app.js
 node --check ads.js
+node --check youtube-feed.v1.js
+node --check functions/api/youtube.js
 ```
 
 El job de GitHub Actions se llama exactamente `reference-checks`.
@@ -167,8 +179,8 @@ Después ejecuta la generación y las validaciones.
 
 ## Seguridad
 
-- No publiques contraseñas, tokens, llaves privadas ni archivos `.env`.
-- No publiques repositorios, documentos o enlaces delicados.
+- No publiques contraseñas, tokens, llaves privadas ni archivos `.env` o `.dev.vars`.
+- La clave de YouTube se configura como secreto en Cloudflare.
+- No publiques identificadores internos de Cloudflare que no sean necesarios.
 - Verifica el destino de cada enlace y anuncio.
-- Usa `visible: false` para retirar contenido sin borrarlo.
 - Revisa y valida los cambios antes de fusionarlos con `main`.
