@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Eidon-Store: catálogo peruano con pedidos coordinados por WhatsApp.">
+  <meta name="theme-color" content="#050505">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self'; font-src 'self'; media-src 'none'; worker-src 'none'; upgrade-insecure-requests">
+  <title>Eidon-Store — Catálogo y pedidos por WhatsApp</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#catalogo">Saltar al catálogo</a>
+
+  <header class="store-header">
+    <a class="store-brand" href="./" aria-label="Inicio de Eidon-Store">
+      <span aria-hidden="true">&lt;/&gt;</span>
+      <strong>EIDON-STORE</strong>
+    </a>
+    <nav aria-label="Navegación principal">
+      <a href="#catalogo">Catálogo</a>
+      <button type="button" class="cart-trigger" data-cart-open>
+        Pedido <span class="cart-count" data-cart-count>0</span>
+      </button>
+      <a href="../">Eidon Aetho ↗</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="store-hero" aria-labelledby="store-title">
+      <div>
+        <p class="kicker">PERÚ · PEDIDOS COORDINADOS</p>
+        <h1 id="store-title">PRODUCTOS DIRECTOS.<br>GESTIÓN POR WHATSAPP.</h1>
+        <p class="hero-copy">Eidon-Store conecta al comprador con el responsable de preparar y entregar cada producto. El método de cobro por Yape o Plin se definirá antes de activar ventas reales.</p>
+        <a class="button button-primary" href="#catalogo">Ver catálogo ↓</a>
+      </div>
+      <aside class="status-panel" aria-label="Estado de la tienda">
+        <span>&gt; store = {</span>
+        <span>catalog: <b data-product-count>0</b>,</span>
+        <span>cart: <b data-cart-status>0</b>,</span>
+        <span>orders: <b data-orders-status>PREPARACIÓN</b></span>
+        <span>}</span>
+      </aside>
+    </section>
+
+    <section class="process-strip" aria-label="Cómo funciona">
+      <article><b>01</b><span>Elige productos</span></article>
+      <article><b>02</b><span>Genera tu pedido</span></article>
+      <article><b>03</b><span>Coordina por WhatsApp</span></article>
+      <article><b>04</b><span>El proveedor gestiona la entrega</span></article>
+    </section>
+
+    <section class="catalog-section" id="catalogo" aria-labelledby="catalog-title">
+      <header class="section-heading">
+        <div>
+          <p class="kicker">CATÁLOGO</p>
+          <h2 id="catalog-title">PRODUCTOS DISPONIBLES</h2>
+        </div>
+        <div class="catalog-tools">
+          <label>
+            <span>Buscar</span>
+            <input type="search" data-search placeholder="Nombre o categoría" autocomplete="off">
+          </label>
+          <label>
+            <span>Categoría</span>
+            <select data-category>
+              <option value="all">Todas</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <p class="catalog-status" data-catalog-status>Cargando catálogo…</p>
+      <div class="product-grid" data-product-grid aria-live="polite"></div>
+    </section>
+
+    <section class="trust-section" aria-labelledby="trust-title">
+      <h2 id="trust-title">ANTES DE COMPRAR</h2>
+      <div class="trust-grid">
+        <article><strong>PRECIO CONFIRMADO</strong><p>El precio final, stock y costo de envío deben confirmarse antes del pago.</p></article>
+        <article><strong>VENDEDOR IDENTIFICADO</strong><p>Cada producto indicará quién gestiona preparación, entrega, cambios y garantía.</p></article>
+        <article><strong>PAGO PENDIENTE</strong><p>Yape o Plin se activarán cuando se defina quién recibe y valida el dinero.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <aside class="cart-drawer" data-cart-drawer aria-hidden="true" aria-labelledby="cart-title">
+    <div class="cart-backdrop" data-cart-close></div>
+    <section class="cart-panel" role="dialog" aria-modal="true">
+      <header>
+        <div>
+          <p class="kicker">PEDIDO</p>
+          <h2 id="cart-title">TU SELECCIÓN</h2>
+        </div>
+        <button type="button" class="icon-button" data-cart-close aria-label="Cerrar pedido">×</button>
+      </header>
+
+      <div class="cart-items" data-cart-items></div>
+      <div class="cart-summary">
+        <span>Subtotal referencial</span>
+        <strong data-cart-total>S/ 0.00</strong>
+      </div>
+
+      <div class="customer-fields">
+        <label>Nombre<input type="text" data-customer-name maxlength="80" autocomplete="name"></label>
+        <label>Distrito<input type="text" data-customer-district maxlength="80" autocomplete="address-level2"></label>
+        <label>Dirección o referencia<textarea data-customer-address maxlength="240" rows="3"></textarea></label>
+        <label>Nota adicional<textarea data-customer-notes maxlength="240" rows="2"></textarea></label>
+      </div>
+
+      <div class="payment-placeholder">
+        <strong>PAGO: POR DEFINIR</strong>
+        <p>La tienda todavía no solicita ni valida pagos. Yape o Plin se configurarán después.</p>
+      </div>
+
+      <label class="consent-row">
+        <input type="checkbox" data-consent>
+        <span>Entiendo que el stock, envío y total final se confirman por WhatsApp.</span>
+      </label>
+
+      <p class="order-feedback" data-order-feedback role="status"></p>
+      <div class="cart-actions">
+        <button type="button" class="button" data-copy-order>Copiar pedido</button>
+        <button type="button" class="button button-primary" data-send-order disabled>Enviar por WhatsApp</button>
+      </div>
+      <button type="button" class="text-button" data-clear-cart>Vaciar pedido</button>
+    </section>
+  </aside>
+
+  <footer>
+    <strong>EIDON-STORE</strong>
+    <span>Catálogo intermediario · Perú</span>
+    <span>© <span data-year></span></span>
+  </footer>
+
+  <template id="product-template">
+    <article class="product-card">
+      <div class="product-image-wrap">
+        <img class="product-image" alt="" loading="lazy" decoding="async">
+        <span class="product-placeholder" aria-hidden="true">PRODUCT</span>
+        <span class="stock-badge"></span>
+      </div>
+      <div class="product-body">
+        <span class="product-category"></span>
+        <h3></h3>
+        <p class="product-description"></p>
+        <div class="product-meta">
+          <strong class="product-price"></strong>
+          <span class="product-seller"></span>
+        </div>
+        <button type="button" class="button button-primary product-add">Agregar al pedido</button>
+      </div>
+    </article>
+  </template>
+</body>
+</html>

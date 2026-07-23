@@ -1,0 +1,15 @@
+[
+  {
+    "id": "producto-demo-001",
+    "title": "Producto de demostración",
+    "description": "Sustituye esta ficha por información confirmada del proveedor.",
+    "category": "Accesorios",
+    "price": 49.9,
+    "image": "",
+    "sellerName": "Proveedor por confirmar",
+    "providerId": "proveedor-01",
+    "available": false,
+    "visible": false,
+    "order": 10
+  }
+]

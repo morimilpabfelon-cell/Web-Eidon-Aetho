@@ -1,0 +1,11 @@
+{
+  "storeName": "Eidon-Store",
+  "locale": "es-PE",
+  "currency": "PEN",
+  "orderPrefix": "ES",
+  "ordersEnabled": false,
+  "orderRouting": "pending",
+  "eidonWhatsApp": "",
+  "supportWhatsApp": "",
+  "providers": []
+}

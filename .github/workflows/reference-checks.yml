@@ -41,6 +41,7 @@ jobs:
           node --check ads.js
           node --check ad-brand-logos.v1.js
           node --check youtube-feed.v1.js
+          node --check store/app.js
           while IFS= read -r -d '' file; do
             node --check "$file"
           done < <(find functions -type f -name '*.js' -print0)
@@ -48,9 +49,19 @@ jobs:
       - name: Validate JSON documents
         shell: bash
         run: |
-          for file in data/*.json _routes.json; do
+          for file in data/*.json store/data/*.json _routes.json; do
             python -m json.tool "$file" > /dev/null
           done
+
+      - name: Validate store references
+        shell: bash
+        run: |
+          test -f store/index.html
+          test -f store/styles.css
+          test -f store/app.js
+          grep -q 'data/products.json' store/app.js
+          grep -q 'data/config.json' store/app.js
+          grep -q 'link.href = "store/"' ad-brand-logos.v1.js
 
       - name: Verify generated HTML
         run: python scripts/prerender.py --check
