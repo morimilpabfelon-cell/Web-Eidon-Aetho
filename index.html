@@ -26,13 +26,13 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; font-src 'self'; media-src 'none'; worker-src 'none'; manifest-src 'self'; upgrade-insecure-requests">
   <title>Eidon Aetho — Project Hub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20260718-3">
+  <link rel="stylesheet" href="styles.css?v=20260723-1">
   <link rel="stylesheet" href="background-stickers.css?v=20260718-1">
   <link rel="stylesheet" href="ad-marquee.css?v=20260718-4">
   <link rel="stylesheet" href="hero-profile.css?v=20260718-4">
   <link rel="stylesheet" href="hero-heading.css?v=20260718-2">
   <link rel="stylesheet" href="featured-projects.css?v=20260718-1">
-  <script src="app.js?v=20260718-6" defer></script>
+  <script src="app.js?v=20260723-1" defer></script>
   <script src="ads.js?v=20260718-4" defer></script>
 </head>
 <body>
@@ -137,7 +137,15 @@
         <h2>El contenido aparece cuando está listo para ser público.</h2>
         <a class="button button-white" href="#inicio">Volver arriba</a>
       </section>
-    </main>
+    <!-- PRERENDER:START -->
+<section class="prerender-fallback" data-prerender-fallback aria-label="Contenido publicado">
+  <div class="prerender-fallback__inner">
+    <section class="prerender-fallback__section prerender-fallback__section--projects"><h2>Proyectos publicados</h2><div class="prerender-fallback__grid"><article class="prerender-fallback__card"><h3>DELIVER ASSETS</h3><p>Experiencia web conceptual para una plataforma de entregas, con interfaces diferenciadas para cliente, negocio, repartidor y administración.</p><ul class="prerender-fallback__tags"><li>React</li><li>TypeScript</li><li>Vite</li><li>Motion UI</li></ul></article></div></section>
+    <section class="prerender-fallback__section prerender-fallback__section--links"><h2>Enlaces oficiales</h2><ul class="prerender-fallback__links"><li><a href="https://www.tiktok.com/@eidonaetho" target="_blank" rel="noopener noreferrer">TikTok</a></li><li><a href="https://x.com/Eidon_Morimil" target="_blank" rel="noopener noreferrer">X</a></li><li><a href="https://www.youtube.com/@eidon-aetho" target="_blank" rel="noopener noreferrer">YouTube</a></li><li><a href="https://t.me/eidonaetho" target="_blank" rel="noopener noreferrer">Telegram</a></li></ul></section>
+  </div>
+</section>
+<!-- PRERENDER:END -->
+</main>
 
     <footer class="footer">
       <strong>&lt;/&gt; EIDON AETHO</strong>
