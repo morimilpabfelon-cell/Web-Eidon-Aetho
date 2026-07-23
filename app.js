@@ -21,7 +21,8 @@ function isSafeUrl(value) {
 
 function isSafeAssetPath(value) {
   if (typeof value !== "string") return false;
-  return /^(?:\.\/)?assets\/[a-zA-Z0-9/_\-.]+$/.test(value.trim());
+  const path = value.trim();
+  return /^(?:\.\/)?assets\/[a-zA-Z0-9/_\-.]+$/.test(path);
 }
 
 function cleanText(value, fallback = "") {
@@ -82,10 +83,7 @@ function projectPreview(project) {
   if (isSafeUrl(source) || isSafeAssetPath(source)) {
     const image = document.createElement("img");
     image.src = source;
-    image.alt = cleanText(
-      project.imageAlt,
-      `Vista previa de ${cleanText(project.name, "proyecto")}`
-    );
+    image.alt = cleanText(project.imageAlt, `Vista previa de ${cleanText(project.name, "proyecto")}`);
     image.loading = "lazy";
     image.decoding = "async";
     media.append(image);
@@ -131,8 +129,8 @@ function featuredProjectCard(project, index, total) {
 
   if (Array.isArray(project.tags)) {
     project.tags.forEach((value) => {
-      const label = cleanText(String(value));
-      if (label) tags.append(projectTag(label));
+      const text = cleanText(String(value));
+      if (text) tags.append(projectTag(text));
     });
   }
 
@@ -153,7 +151,7 @@ function featuredProjectCard(project, index, total) {
   return article;
 }
 
-function updateProjectCarousel(nextIndex) {
+function updateProjectCarousel(nextIndex, moveFocus = false) {
   const stage = document.querySelector("[data-project-stage]");
   const dots = document.querySelector("[data-project-dots]");
   const previous = document.querySelector("[data-project-prev]");
@@ -172,11 +170,16 @@ function updateProjectCarousel(nextIndex) {
   );
 
   dots.querySelectorAll(".project-dot").forEach((dot, index) => {
-    if (index === projectCarousel.index) {
+    const selected = index === projectCarousel.index;
+    dot.setAttribute("aria-selected", selected ? "true" : "false");
+    if (selected) {
       dot.setAttribute("aria-current", "true");
+      stage.setAttribute("aria-labelledby", dot.id);
     } else {
       dot.removeAttribute("aria-current");
     }
+    dot.tabIndex = selected ? 0 : -1;
+    if (selected && moveFocus) dot.focus();
   });
 
   previous.disabled = total <= 1;
@@ -214,11 +217,31 @@ function renderProjects(items) {
   projects.forEach((project, index) => {
     const dot = document.createElement("button");
     dot.type = "button";
+    dot.id = `project-tab-${index + 1}`;
     dot.className = "project-dot";
+    dot.setAttribute("role", "tab");
+    dot.setAttribute("aria-controls", "featured-project-panel");
     dot.setAttribute("aria-label", `Ver ${cleanText(project.name, `proyecto ${index + 1}`)}`);
+    dot.tabIndex = -1;
     dot.addEventListener("click", () => updateProjectCarousel(index));
     dots.append(dot);
   });
+
+  dots.onkeydown = (event) => {
+    if (event.key === "ArrowRight") {
+      updateProjectCarousel(projectCarousel.index + 1, true);
+      event.preventDefault();
+    } else if (event.key === "ArrowLeft") {
+      updateProjectCarousel(projectCarousel.index - 1, true);
+      event.preventDefault();
+    } else if (event.key === "Home") {
+      updateProjectCarousel(0, true);
+      event.preventDefault();
+    } else if (event.key === "End") {
+      updateProjectCarousel(projectCarousel.items.length - 1, true);
+      event.preventDefault();
+    }
+  };
 
   previous.onclick = () => updateProjectCarousel(projectCarousel.index - 1);
   next.onclick = () => updateProjectCarousel(projectCarousel.index + 1);
