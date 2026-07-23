@@ -1,0 +1,61 @@
+.note-card--cloudflare {
+  align-items: start;
+}
+
+.note-card--cloudflare .note-copy {
+  min-width: 0;
+}
+
+.note-body {
+  white-space: pre-wrap;
+}
+
+.note-media {
+  width: 100%;
+  min-width: 0;
+  margin: 4px 0 0;
+  overflow: hidden;
+  border: var(--border);
+  background: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.note-media img,
+.note-media video {
+  width: 100%;
+  max-height: min(72vh, 680px);
+  display: block;
+  object-fit: contain;
+  background: var(--ink);
+}
+
+.note-media audio {
+  width: 100%;
+  display: block;
+  background: var(--paper);
+}
+
+.note-file-link,
+.note-source-link {
+  margin-top: 3px;
+}
+
+.note-load-more {
+  width: min(100%, 260px);
+  justify-self: center;
+  align-self: center;
+  margin: 8px auto 2px;
+  cursor: pointer;
+}
+
+.note-load-more:disabled {
+  cursor: wait;
+  opacity: .68;
+}
+
+@media (max-width: 560px) {
+  .note-media img,
+  .note-media video {
+    max-height: 68vh;
+  }
+}
