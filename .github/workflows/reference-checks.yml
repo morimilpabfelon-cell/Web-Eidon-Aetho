@@ -30,7 +30,9 @@ jobs:
           node-version: "22"
 
       - name: Validate Python
-        run: python -m py_compile scripts/prerender.py
+        run: |
+          python -m py_compile scripts/prerender.py
+          python -m py_compile scripts/validate_static.py
 
       - name: Validate JavaScript
         run: |
@@ -46,3 +48,6 @@ jobs:
 
       - name: Verify generated HTML
         run: python scripts/prerender.py --check
+
+      - name: Validate static publication
+        run: python scripts/validate_static.py
