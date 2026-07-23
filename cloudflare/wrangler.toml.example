@@ -1,0 +1,19 @@
+name = "web-eidon-aetho"
+compatibility_date = "2026-07-23"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "NOTES_DB"
+database_name = "eidon-notes"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[[r2_buckets]]
+binding = "NOTES_MEDIA"
+bucket_name = "eidon-notes-media"
+
+[vars]
+TELEGRAM_CHANNEL_ID = "REPLACE_WITH_CHANNEL_ID"
+TELEGRAM_ADMIN_USER_ID = "REPLACE_WITH_ADMIN_USER_ID"
+TELEGRAM_CHANNEL_URL = "https://t.me/REPLACE_WITH_CHANNEL_USERNAME"
+# Opcional: solo publica mensajes que contengan esta marca.
+# TELEGRAM_PUBLISH_TAG = "#nota"
