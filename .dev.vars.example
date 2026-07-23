@@ -1,0 +1,4 @@
+# Solo para desarrollo local. Copia este archivo como .dev.vars.
+# Nunca publiques valores reales en GitHub.
+TELEGRAM_BOT_TOKEN=REPLACE_WITH_BOT_TOKEN
+TELEGRAM_WEBHOOK_SECRET=REPLACE_WITH_RANDOM_SECRET
