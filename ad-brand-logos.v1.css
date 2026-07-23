@@ -1,3 +1,29 @@
+.site-brand > .site-brand__link {
+  flex: 1 1 auto;
+  width: auto;
+}
+
+.site-brand__store {
+  min-height: 58px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  padding: 10px clamp(14px, 2vw, 24px);
+  border-left: var(--border);
+  background: var(--pink);
+  font-family: "Courier New", monospace;
+  font-size: clamp(.72rem, .66rem + .22vw, .9rem);
+  font-weight: 950;
+  letter-spacing: .08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.site-brand__store:hover,
+.site-brand__store:focus-visible {
+  background: var(--paper);
+}
+
 .ad-card.ad-card--brand {
   width: clamp(310px, 31vw, 420px);
   min-height: 108px;
@@ -122,6 +148,13 @@
 }
 
 @media (max-width: 760px) {
+  .site-brand__store {
+    min-height: 56px;
+    padding-inline: 11px;
+    font-size: .66rem;
+    letter-spacing: .04em;
+  }
+
   .ad-card.ad-card--brand {
     width: min(86vw, 370px);
     min-height: 100px;
@@ -147,5 +180,12 @@
   .ad-brand-arrow {
     width: 31px;
     height: 31px;
+  }
+}
+
+@media (max-width: 430px) {
+  .site-brand__store {
+    max-width: 94px;
+    text-align: center;
   }
 }
