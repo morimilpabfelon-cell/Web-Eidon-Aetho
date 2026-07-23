@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import re
@@ -15,8 +16,16 @@ DATA_DIR = ROOT / "data"
 
 HTML_START = "<!-- PRERENDER:START -->"
 HTML_END = "<!-- PRERENDER:END -->"
+SOCIALS_START = "<!-- STATIC-SOCIALS:START -->"
+SOCIALS_END = "<!-- STATIC-SOCIALS:END -->"
+JSONLD_START = "<!-- PERSON-JSONLD:START -->"
+JSONLD_END = "<!-- PERSON-JSONLD:END -->"
+
+SITE_URL = "https://morimilpabfelon-cell.github.io/Web-Eidon-Aetho/"
+PROFILE_IMAGE_URL = SITE_URL + "assets/og-cover.png"
+GITHUB_PROFILE_URL = "https://github.com/morimilpabfelon-cell"
 LOCAL_ASSET_PATTERN = re.compile(r"^(?:\./)?assets/[a-zA-Z0-9/_\-.]+$")
-VERSIONED_ASSETS = ("app.js", "ads.js", "ad-marquee.css")
+VERSIONED_ASSETS = ("app.js", "ads.js", "ad-marquee.css", "hero-profile.css")
 
 
 def read_text(path: Path) -> str:
@@ -130,18 +139,6 @@ def render_project(item: dict) -> str:
     )
 
 
-def render_social(item: dict) -> str:
-    url = safe_external_url(item.get("url"))
-    if not url:
-        return ""
-
-    name = clean_text(item.get("name"), "Enlace")
-    return (
-        f'<li><a href="{text(url)}" target="_blank" '
-        f'rel="noopener noreferrer">{text(name)}</a></li>'
-    )
-
-
 def render_note(item: dict) -> str:
     title = clean_text(item.get("title"), "Nota sin título")
     description = clean_text(item.get("description"), "Sin contenido público.")
@@ -154,49 +151,35 @@ def render_note(item: dict) -> str:
     )
 
 
-def section(
-    title: str,
-    content: str,
-    modifier: str,
-    wrapper_tag: str,
-    wrapper_class: str,
-) -> str:
+def render_social_anchor(item: dict) -> str:
+    url = safe_external_url(item.get("url"))
+    if not url:
+        return ""
+
+    name = clean_text(item.get("name"), "Enlace")
+    icon = clean_text(item.get("icon"), name)[:3].upper()
+    label = f"{name}, abrir en una pestaña nueva"
+    return (
+        f'<a class="hero-social-link" href="{text(url)}" target="_blank" '
+        f'rel="noopener noreferrer" title="{text(name)}" aria-label="{text(label)}">'
+        f'<span aria-hidden="true">{text(icon)}</span></a>'
+    )
+
+
+def section(title: str, content: str, modifier: str) -> str:
     if not content:
         return ""
     return (
         f'<section class="prerender-fallback__section prerender-fallback__section--{modifier}">'
         f"<h2>{text(title)}</h2>"
-        f'<{wrapper_tag} class="{wrapper_class}">{content}</{wrapper_tag}></section>'
+        f'<div class="prerender-fallback__grid">{content}</div></section>'
     )
 
 
-def build_fallback() -> str:
-    projects = load_visible_items("projects.json")
-    socials = load_visible_items("socials.json")
-    notes = load_visible_items("notes.json")
-
+def build_fallback(projects: list[dict], notes: list[dict]) -> str:
     blocks = [
-        section(
-            "Proyectos publicados",
-            "".join(render_project(item) for item in projects),
-            "projects",
-            "div",
-            "prerender-fallback__grid",
-        ),
-        section(
-            "Enlaces oficiales",
-            "".join(filter(None, (render_social(item) for item in socials))),
-            "links",
-            "ul",
-            "prerender-fallback__links",
-        ),
-        section(
-            "Notas publicadas",
-            "".join(render_note(item) for item in notes),
-            "notes",
-            "div",
-            "prerender-fallback__grid",
-        ),
+        section("Proyectos publicados", "".join(render_project(item) for item in projects), "projects"),
+        section("Notas publicadas", "".join(render_note(item) for item in notes), "notes"),
     ]
     content = "\n    ".join(block for block in blocks if block)
 
@@ -215,18 +198,87 @@ def build_fallback() -> str:
     )
 
 
-def replace_fallback(source: str, fallback: str) -> str:
-    pattern = re.compile(
-        re.escape(HTML_START) + r".*?" + re.escape(HTML_END),
-        re.DOTALL,
-    )
-    if pattern.search(source):
-        return pattern.sub(fallback, source, count=1)
+def build_static_socials(socials: list[dict]) -> tuple[str, list[str]]:
+    anchors = [render_social_anchor(item) for item in socials]
+    anchors = [anchor for anchor in anchors if anchor]
+    urls = [safe_external_url(item.get("url")) for item in socials]
+    urls = [url for url in urls if url]
 
-    position = source.lower().rfind("</main>")
-    if position == -1:
-        raise ValueError("index.html no contiene </main>.")
-    return source[:position] + fallback + "\n" + source[position:]
+    if anchors:
+        content = "\n            ".join(anchors)
+        block = f"{SOCIALS_START}\n            {content}\n            {SOCIALS_END}"
+    else:
+        block = f"{SOCIALS_START}\n            {SOCIALS_END}"
+    return block, urls
+
+
+def build_jsonld(social_urls: list[str]) -> tuple[str, str]:
+    same_as = list(dict.fromkeys([*social_urls, GITHUB_PROFILE_URL]))
+    payload = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Eidon Aetho",
+        "alternateName": "Eidon",
+        "url": SITE_URL,
+        "image": PROFILE_IMAGE_URL,
+        "jobTitle": "Programador independiente",
+        "description": "Desarrolla proyectos de software y publica una selección de trabajos, enlaces y notas.",
+        "sameAs": same_as,
+    }
+    json_text = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+    block = (
+        f"{JSONLD_START}\n"
+        f'  <script type="application/ld+json">{json_text}</script>\n'
+        f"  {JSONLD_END}"
+    )
+    digest = base64.b64encode(hashlib.sha256(json_text.encode("utf-8")).digest()).decode("ascii")
+    return block, f"sha256-{digest}"
+
+
+def replace_marked_block(source: str, start: str, end: str, replacement: str) -> str:
+    pattern = re.compile(re.escape(start) + r".*?" + re.escape(end), re.DOTALL)
+    if not pattern.search(source):
+        raise ValueError(f"index.html no contiene el bloque {start}.")
+    return pattern.sub(replacement, source, count=1)
+
+
+def update_link_count(source: str, count: int) -> str:
+    pattern = re.compile(r'(<b\s+data-link-count>)[^<]*(</b>)')
+    updated, matches = pattern.subn(rf"\g<1>{count}\g<2>", source, count=1)
+    if matches != 1:
+        raise ValueError("No se encontró data-link-count en index.html.")
+    return updated
+
+
+def update_social_hidden_state(source: str, count: int) -> str:
+    pattern = re.compile(
+        r'(<div class="hero-socials" id="enlaces" data-hero-socials aria-label="Redes sociales")(?P<hidden> hidden)?(>)'
+    )
+
+    def replacement(match: re.Match[str]) -> str:
+        hidden = " hidden" if count == 0 else ""
+        return f"{match.group(1)}{hidden}{match.group(3)}"
+
+    updated, matches = pattern.subn(replacement, source, count=1)
+    if matches != 1:
+        raise ValueError("No se encontró el contenedor hero-socials en index.html.")
+    return updated
+
+
+def update_csp_hash(source: str, script_hash: str) -> str:
+    pattern = re.compile(
+        r'(<meta http-equiv="Content-Security-Policy" content=")(?P<policy>[^"]+)(">)'
+    )
+
+    def replacement(match: re.Match[str]) -> str:
+        policy = re.sub(r"\s+'sha256-[A-Za-z0-9+/=]+'", "", match.group("policy"))
+        policy = policy.replace("script-src 'self'", f"script-src 'self' '{script_hash}'", 1)
+        return f"{match.group(1)}{policy}{match.group(3)}"
+
+    updated, matches = pattern.subn(replacement, source, count=1)
+    if matches != 1:
+        raise ValueError("No se encontró la Content-Security-Policy en index.html.")
+    return updated
 
 
 def asset_version(filename: str) -> str:
@@ -246,14 +298,30 @@ def update_asset_version(source: str, filename: str) -> str:
 
 
 def expected_index() -> str:
-    source = replace_fallback(read_text(INDEX_PATH), build_fallback())
+    projects = load_visible_items("projects.json")
+    socials = load_visible_items("socials.json")
+    notes = load_visible_items("notes.json")
+
+    social_block, social_urls = build_static_socials(socials)
+    jsonld_block, jsonld_hash = build_jsonld(social_urls)
+
+    source = read_text(INDEX_PATH)
+    source = replace_marked_block(source, SOCIALS_START, SOCIALS_END, social_block)
+    source = replace_marked_block(source, JSONLD_START, JSONLD_END, jsonld_block)
+    source = replace_marked_block(source, HTML_START, HTML_END, build_fallback(projects, notes))
+    source = update_link_count(source, len(social_urls))
+    source = update_social_hidden_state(source, len(social_urls))
+    source = update_csp_hash(source, jsonld_hash)
+
     for filename in VERSIONED_ASSETS:
         source = update_asset_version(source, filename)
     return source
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Genera el fallback HTML desde data/*.json.")
+    parser = argparse.ArgumentParser(
+        description="Genera contenido HTML estático desde data/*.json."
+    )
     parser.add_argument(
         "--check",
         action="store_true",
@@ -274,15 +342,15 @@ def main() -> int:
                 file=sys.stderr,
             )
             return 1
-        print("Pre-renderizado actualizado.")
+        print("Contenido estático actualizado.")
         return 0
 
     if current == expected:
-        print("Pre-renderizado sin cambios.")
+        print("Contenido estático sin cambios.")
         return 0
 
     write_text(INDEX_PATH, expected)
-    print("Pre-renderizado generado.")
+    print("Contenido estático generado.")
     return 0
 
 
