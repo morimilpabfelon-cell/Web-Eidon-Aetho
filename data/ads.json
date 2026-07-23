@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "label": "AFILIADO 01",
+    "title": "BINANCE",
+    "description": "Registro mediante enlace de referido. Los criptoactivos implican riesgo y pueden perder valor.",
+    "accent": "#f0b90b",
+    "url": "https://www.binance.com/register?ref=B3FNDEM4&utm_medium=app_share_link",
+    "visible": true,
+    "order": 10
+  },
+  {
+    "label": "AFILIADO 02",
+    "title": "TRADINGVIEW",
+    "description": "Consulta los planes de TradingView mediante mi enlace de referido.",
+    "accent": "#2962ff",
+    "url": "https://es.tradingview.com/pricing/?share_your_love=Morimil&mobileapp=true",
+    "visible": true,
+    "order": 20
+  }
+]
