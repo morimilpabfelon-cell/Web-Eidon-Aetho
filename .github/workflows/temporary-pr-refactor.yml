@@ -24,6 +24,21 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Repair temporary regex replacement
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/temporary_semantic_refactor.py")
+          source = path.read_text(encoding="utf-8")
+          old = "\n    'def update_counter(source: str, attribute: str, count: int) -> str:"
+          new = "\n    lambda _match: 'def update_counter(source: str, attribute: str, count: int) -> str:"
+          if source.count(old) != 1:
+              raise RuntimeError("No se encontró la sustitución temporal esperada.")
+          path.write_text(source.replace(old, new, 1), encoding="utf-8", newline="\n")
+          PY
+
       - name: Apply transformation
         run: python scripts/temporary_semantic_refactor.py
 
