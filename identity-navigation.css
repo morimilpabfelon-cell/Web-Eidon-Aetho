@@ -89,7 +89,7 @@
     margin-inline: auto;
   }
 
-  .hero-nav a + a {
+  .hero-nav a:not(:first-child) {
     border-top: 3px solid var(--ink);
   }
 
