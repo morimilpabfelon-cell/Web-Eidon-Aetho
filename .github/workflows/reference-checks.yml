@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   reference-checks:
@@ -18,8 +18,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -30,100 +28,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-
-      - name: Apply OG-inspired navigation
-        if: github.event_name == 'pull_request' && github.head_ref == 'design/og-inspired-navigation'
-        shell: bash
-        run: |
-          python <<'PY'
-          from pathlib import Path
-          import re
-
-          def read(path: str) -> str:
-              return Path(path).read_text(encoding="utf-8")
-
-          def write(path: str, content: str) -> None:
-              Path(path).write_text(content, encoding="utf-8", newline="\n")
-
-          index = read("index.html")
-          if 'identity-navigation.css' not in index:
-              index, count = re.subn(
-                  r'(  <link rel="stylesheet" href="featured-projects\.css\?v=[^"]+">\n)',
-                  r'\1  <link rel="stylesheet" href="identity-navigation.css?v=TEMP">\n',
-                  index,
-                  count=1,
-              )
-              if count != 1:
-                  raise RuntimeError("No se pudo añadir identity-navigation.css.")
-
-              old_shell = '  <div class="site-shell">\n    <main id="contenido">'
-              new_shell = '''  <div class="site-shell">
-    <header class="site-brand">
-      <a class="site-brand__link" href="#inicio" aria-label="Ir al inicio de Eidon Aetho">
-        <span class="site-brand__code" aria-hidden="true">&lt;/&gt;</span>
-        <span class="site-brand__name">EIDON AETHO</span>
-      </a>
-    </header>
-
-    <main id="contenido">'''
-              if index.count(old_shell) != 1:
-                  raise RuntimeError("No se encontró el contenedor principal esperado.")
-              index = index.replace(old_shell, new_shell, 1)
-
-              old_social_end = '''            <!-- STATIC-SOCIALS:END -->
-          </div>
-        </div>'''
-              new_social_end = '''            <!-- STATIC-SOCIALS:END -->
-          </div>
-
-          <nav class="hero-nav" aria-label="Secciones principales">
-            <a href="#proyectos">Projects</a>
-            <span class="hero-nav__separator" aria-hidden="true">·</span>
-            <a href="#enlaces">Links</a>
-            <span class="hero-nav__separator" aria-hidden="true">·</span>
-            <a href="#notas">Notes</a>
-          </nav>
-        </div>'''
-              if index.count(old_social_end) != 1:
-                  raise RuntimeError("No se encontró el cierre de enlaces sociales esperado.")
-              index = index.replace(old_social_end, new_social_end, 1)
-              write("index.html", index)
-
-          prerender = read("scripts/prerender.py")
-          if '    "identity-navigation.css",' not in prerender:
-              old = '    "styles.css",\n    "background-stickers.css",'
-              new = '    "styles.css",\n    "identity-navigation.css",\n    "background-stickers.css",'
-              if prerender.count(old) != 1:
-                  raise RuntimeError("No se encontró VERSIONED_ASSETS.")
-              write("scripts/prerender.py", prerender.replace(old, new, 1))
-
-          validator = read("scripts/validate_static.py")
-          if 'Debe existir una única cabecera de marca.' not in validator:
-              old = '    require(\'aria-labelledby="featured-projects-title"\' in source, "El panel necesita etiqueta estática.")\n'
-              new = '''    require('aria-labelledby="featured-projects-title"' in source, "El panel necesita etiqueta estática.")
-    require(source.count('class="site-brand"') == 1, "Debe existir una única cabecera de marca.")
-    require(source.count('class="hero-nav"') == 1, "Debe existir una única navegación principal.")
-    nav_blocks = re.findall(r'<nav class="hero-nav"[^>]*>(.*?)</nav>', source, flags=re.DOTALL)
-    require(len(nav_blocks) == 1, "No se pudo aislar la navegación principal.")
-    nav_targets = re.findall(r'<a href="(#[a-zA-Z0-9_-]+)">', nav_blocks[0])
-    require(nav_targets == ["#proyectos", "#enlaces", "#notas"], "Enlaces principales inesperados.")
-    for target in nav_targets:
-        require(f'id="{target[1:]}"' in source, f"Destino interno inexistente: {target}")
-'''
-              if validator.count(old) != 1:
-                  raise RuntimeError("No se encontró el punto de validación esperado.")
-              validator = validator.replace(old, new, 1)
-              validator = validator.replace(
-                  '    print("Semántica, contadores, HTML, JSON-LD, CSP, sitemap, robots y 404 válidos.")',
-                  '    print("Navegación, semántica, contadores, HTML, JSON-LD, CSP, sitemap, robots y 404 válidos.")',
-                  1,
-              )
-              write("scripts/validate_static.py", validator)
-          PY
-
-      - name: Regenerate generated HTML
-        if: github.event_name == 'pull_request' && github.head_ref == 'design/og-inspired-navigation'
-        run: python scripts/prerender.py
 
       - name: Validate Python
         run: |
@@ -147,17 +51,3 @@ jobs:
 
       - name: Validate static publication
         run: python scripts/validate_static.py
-
-      - name: Commit validated integration
-        if: github.event_name == 'pull_request' && github.head_ref == 'design/og-inspired-navigation'
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html identity-navigation.css scripts/prerender.py scripts/validate_static.py
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-          git commit -m "design: integrar navegación inspirada en la tarjeta social"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
