@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX_PATH = ROOT / "index.html"
+STORE_INDEX_PATH = ROOT / "store" / "index.html"
 ROBOTS_PATH = ROOT / "robots.txt"
 SITEMAP_PATH = ROOT / "sitemap.xml"
 NOT_FOUND_PATH = ROOT / "404.html"
@@ -157,11 +158,29 @@ def validate_index() -> str:
     return canonical
 
 
+def validate_store() -> None:
+    source, parser = parse_html(STORE_INDEX_PATH)
+    h1_blocks = re.findall(r"<h1\b[^>]*>(.*?)</h1>", source, flags=re.IGNORECASE | re.DOTALL)
+    require(len(h1_blocks) == 1, "Eidon-Store debe contener un único h1.")
+    require("eidon-store" in source.casefold(), "La tienda debe identificar Eidon-Store.")
+    require(meta_value(parser, "http-equiv", "Content-Security-Policy"), "Eidon-Store necesita CSP.")
+
+    for asset in ("store/styles.css", "store/app.js", "store/data/config.json", "store/data/products.json"):
+        path = ROOT / asset
+        require(path.is_file() and path.stat().st_size > 0, f"Falta el recurso {asset}.")
+
+    products = json.loads((ROOT / "store/data/products.json").read_text(encoding="utf-8"))
+    config = json.loads((ROOT / "store/data/config.json").read_text(encoding="utf-8"))
+    require(isinstance(products, list), "store/data/products.json debe contener una lista.")
+    require(isinstance(config, dict), "store/data/config.json debe contener un objeto.")
+    require(config.get("ordersEnabled") is False, "Los pedidos deben permanecer desactivados en el MVP inicial.")
+
+
 def validate_sitemap(canonical: str) -> None:
     root = ET.parse(SITEMAP_PATH).getroot()
     namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     locations = [node.text or "" for node in root.findall("sm:url/sm:loc", namespace)]
-    require(locations == [canonical], "sitemap.xml debe contener únicamente la URL canonical.")
+    require(locations == [canonical, f"{canonical}store/"], "sitemap.xml debe contener la portada y Eidon-Store.")
 
 
 def validate_robots(canonical: str) -> None:
@@ -181,10 +200,11 @@ def validate_404(canonical: str) -> None:
 
 def main() -> int:
     canonical = validate_index()
+    validate_store()
     validate_sitemap(canonical)
     validate_robots(canonical)
     validate_404(canonical)
-    print("Semántica, contadores, HTML, JSON-LD, CSP, sitemap, robots y 404 válidos.")
+    print("Semántica, tienda, contadores, HTML, JSON-LD, CSP, sitemap, robots y 404 válidos.")
     return 0
 
 
