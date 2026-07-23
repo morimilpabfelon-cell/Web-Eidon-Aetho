@@ -4,8 +4,6 @@ const DATA_FILES = Object.freeze({
   notes: "data/notes.json"
 });
 
-const HERO_IMAGE_FILE = "assets/eidon-cat.webp.b64";
-
 const projectCarousel = {
   items: [],
   index: 0
@@ -46,24 +44,6 @@ async function loadList(path) {
   }
 }
 
-async function loadHeroPhoto() {
-  const image = document.querySelector("[data-hero-photo]");
-  if (!image) return;
-
-  try {
-    const response = await fetch(HERO_IMAGE_FILE, { cache: "force-cache" });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const encoded = (await response.text()).replace(/\s+/g, "");
-    if (!encoded) throw new Error("La imagen codificada está vacía");
-
-    image.src = `data:image/webp;base64,${encoded}`;
-  } catch (error) {
-    console.warn("No se pudo cargar la imagen del hero.", error);
-    image.removeAttribute("src");
-    image.alt = "Imagen del perfil no disponible";
-  }
-}
 
 function visibleItems(items) {
   return items
@@ -315,7 +295,6 @@ async function initialize() {
     loadList(DATA_FILES.projects),
     loadList(DATA_FILES.socials),
     loadList(DATA_FILES.notes),
-    loadHeroPhoto()
   ]);
 
   renderProjects(projects);
