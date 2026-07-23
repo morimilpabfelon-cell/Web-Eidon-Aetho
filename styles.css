@@ -134,13 +134,9 @@ main {
 
 .hero h1 {
   width: 100%;
-  max-width: 10ch;
   margin: 20px 0 16px;
   font-family: var(--display-font);
-  font-size: clamp(3rem, 3.7vw, 4.25rem);
   font-weight: 700;
-  line-height: .98;
-  letter-spacing: -.045em;
   text-transform: uppercase;
 }
 
@@ -190,16 +186,7 @@ main {
   position: relative;
   display: grid;
   place-items: center;
-  padding: 26px;
   border-left: var(--border);
-}
-
-.visual-frame {
-  width: min(100%, 360px);
-  aspect-ratio: 4 / 5;
-  padding: 14px;
-  border: var(--border);
-  box-shadow: var(--shadow);
 }
 
 .visual-canvas {
@@ -212,10 +199,7 @@ main {
 }
 
 .status-card {
-  width: min(280px, calc(100% - 36px));
   position: absolute;
-  right: 18px;
-  bottom: 18px;
   display: grid;
   gap: 7px;
   padding: 16px;
@@ -404,11 +388,6 @@ main {
     grid-template-columns: 1fr;
   }
 
-  .hero h1 {
-    max-width: 10ch;
-    font-size: clamp(2.9rem, 6.2vw, 4rem);
-  }
-
   .hero-visual {
     min-height: 460px;
     border-top: var(--border);
@@ -427,12 +406,6 @@ main {
   main {
     gap: 14px;
     padding: 12px;
-  }
-
-  .hero h1 {
-    max-width: none;
-    font-size: clamp(2.55rem, 9vw, 3.7rem);
-    line-height: 1;
   }
 
   .footer {
@@ -455,10 +428,6 @@ main {
     padding: 22px 18px;
   }
 
-  .hero h1 {
-    font-size: clamp(2.2rem, 10.5vw, 3rem);
-  }
-
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
@@ -472,16 +441,10 @@ main {
     min-height: auto;
     display: flex;
     flex-direction: column;
-    padding: 18px;
-  }
-
-  .visual-frame {
-    width: min(100%, 320px);
   }
 
   .status-card {
     position: static;
-    width: 100%;
     margin-top: 16px;
   }
 
@@ -506,10 +469,6 @@ main {
 }
 
 @media (max-width: 380px) {
-  .hero h1 {
-    font-size: 2.1rem;
-  }
-
   .section-header h2 {
     font-size: 1.5rem;
   }

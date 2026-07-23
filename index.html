@@ -34,12 +34,12 @@
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" href="assets/eidon-cat.webp" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=20260723-1">
-  <link rel="stylesheet" href="background-stickers.css?v=20260718-1">
+  <link rel="stylesheet" href="styles.css?v=756d7ea35ef4">
+  <link rel="stylesheet" href="background-stickers.css?v=7cd7921f7e2b">
   <link rel="stylesheet" href="ad-marquee.css?v=29afdd0fc21a">
-  <link rel="stylesheet" href="hero-profile.css?v=485c6c1d8f53">
-  <link rel="stylesheet" href="hero-heading.css?v=20260718-2">
-  <link rel="stylesheet" href="featured-projects.css?v=20260718-1">
+  <link rel="stylesheet" href="hero-profile.css?v=76e8ecf64248">
+  <link rel="stylesheet" href="hero-heading.css?v=832392dae389">
+  <link rel="stylesheet" href="featured-projects.css?v=3fee97cab936">
   <script src="app.js?v=c079b6199625" defer></script>
   <script src="ads.js?v=0e9800d50da7" defer></script>
 
@@ -90,6 +90,7 @@
       <section class="hero" id="inicio">
         <div class="hero-copy grid-paper">
           <h1 class="hero-identity">
+            <span class="hero-name">EIDON AETHO</span>
             <span>DIGITAL NOMAD</span>
             <span>PROGRAMMER</span>
             <span class="hero-identity-desktop">ULTRA- CAPITALIST</span>
@@ -130,7 +131,7 @@
 
           <div class="status-card violet-panel" aria-label="Resumen del contenido publicado">
             <span>&gt; published = {</span>
-            <span>projects: <b data-project-count>0</b>,</span>
+            <span>projects: <b data-project-count>1</b>,</span>
             <span>links: <b data-link-count>4</b>,</span>
             <span>notes: <b data-note-count>0</b></span>
             <span>}</span>
@@ -154,7 +155,7 @@
         </header>
 
         <div class="featured-project-stage" data-project-stage id="featured-project-panel"
-             role="tabpanel" aria-live="polite"></div>
+             role="tabpanel" aria-labelledby="featured-projects-title" aria-live="polite"></div>
         <div class="featured-project-dots" data-project-dots role="tablist" aria-label="Seleccionar proyecto"></div>
       </section>
 

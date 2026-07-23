@@ -26,7 +26,16 @@ SITE_URL = "https://morimilpabfelon-cell.github.io/Web-Eidon-Aetho/"
 PROFILE_IMAGE_URL = SITE_URL + "assets/og-cover.png"
 GITHUB_PROFILE_URL = "https://github.com/morimilpabfelon-cell"
 LOCAL_ASSET_PATTERN = re.compile(r"^(?:\./)?assets/[a-zA-Z0-9/_\-.]+$")
-VERSIONED_ASSETS = ("app.js", "ads.js", "ad-marquee.css", "hero-profile.css")
+VERSIONED_ASSETS = (
+    "styles.css",
+    "background-stickers.css",
+    "ad-marquee.css",
+    "hero-profile.css",
+    "hero-heading.css",
+    "featured-projects.css",
+    "app.js",
+    "ads.js",
+)
 
 
 def read_text(path: Path) -> str:
@@ -243,11 +252,11 @@ def replace_marked_block(source: str, start: str, end: str, replacement: str) ->
     return pattern.sub(replacement, source, count=1)
 
 
-def update_link_count(source: str, count: int) -> str:
-    pattern = re.compile(r'(<b\s+data-link-count>)[^<]*(</b>)')
+def update_counter(source: str, attribute: str, count: int) -> str:
+    pattern = re.compile(rf'(\<b\s+{re.escape(attribute)}\>)[^<]*(\</b\>)')
     updated, matches = pattern.subn(rf"\g<1>{count}\g<2>", source, count=1)
     if matches != 1:
-        raise ValueError("No se encontró data-link-count en index.html.")
+        raise ValueError(f"No se encontró {attribute} en index.html.")
     return updated
 
 
@@ -310,7 +319,9 @@ def expected_index() -> str:
     source = replace_marked_block(source, SOCIALS_START, SOCIALS_END, social_block)
     source = replace_marked_block(source, JSONLD_START, JSONLD_END, jsonld_block)
     source = replace_marked_block(source, HTML_START, HTML_END, build_fallback(projects, notes))
-    source = update_link_count(source, len(social_urls))
+    source = update_counter(source, "data-project-count", len(projects))
+    source = update_counter(source, "data-link-count", len(social_urls))
+    source = update_counter(source, "data-note-count", len(notes))
     source = update_social_hidden_state(source, len(social_urls))
     source = update_csp_hash(source, jsonld_hash)
 

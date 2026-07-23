@@ -3,6 +3,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import re
 import sys
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
@@ -15,6 +16,8 @@ ROBOTS_PATH = ROOT / "robots.txt"
 SITEMAP_PATH = ROOT / "sitemap.xml"
 NOT_FOUND_PATH = ROOT / "404.html"
 SOCIALS_PATH = ROOT / "data" / "socials.json"
+PROJECTS_PATH = ROOT / "data" / "projects.json"
+NOTES_PATH = ROOT / "data" / "notes.json"
 GITHUB_PROFILE_URL = "https://github.com/morimilpabfelon-cell"
 
 
@@ -92,9 +95,28 @@ def visible_social_urls() -> list[str]:
     return urls
 
 
+def visible_count(path: Path) -> int:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    require(isinstance(payload, list), f"{path.name} debe contener una lista.")
+    return sum(1 for item in payload if isinstance(item, dict) and item.get("visible") is True)
+
+
+def counter_value(source: str, attribute: str) -> int:
+    matches = re.findall(rf'<b\s+{re.escape(attribute)}>(\d+)</b>', source)
+    require(len(matches) == 1, f"Se esperaba un único contador {attribute}.")
+    return int(matches[0])
+
+
 def validate_index() -> str:
     source, parser = parse_html(INDEX_PATH)
     canonical = canonical_url(parser)
+
+    h1_blocks = re.findall(r"<h1\b[^>]*>(.*?)</h1>", source, flags=re.IGNORECASE | re.DOTALL)
+    require(len(h1_blocks) == 1, "Debe existir un único h1.")
+    h1_text = re.sub(r"<[^>]+>", " ", h1_blocks[0])
+    h1_text = " ".join(h1_text.split()).casefold()
+    require("eidon aetho" in h1_text, "El h1 debe identificar a Eidon Aetho.")
+    require('aria-labelledby="featured-projects-title"' in source, "El panel necesita etiqueta estática.")
 
     require(meta_value(parser, "property", "og:url") == canonical, "og:url no coincide con canonical.")
     require(meta_value(parser, "name", "referrer") == "strict-origin-when-cross-origin", "Política referrer inesperada.")
@@ -106,6 +128,9 @@ def validate_index() -> str:
         if "hero-social-link" in anchor.get("class", "").split()
     ]
     require(raw_social_urls == social_urls, "Los enlaces sociales estáticos no coinciden con socials.json.")
+    require(counter_value(source, "data-project-count") == visible_count(PROJECTS_PATH), "Contador de proyectos desactualizado.")
+    require(counter_value(source, "data-link-count") == len(social_urls), "Contador de enlaces desactualizado.")
+    require(counter_value(source, "data-note-count") == visible_count(NOTES_PATH), "Contador de notas desactualizado.")
 
     jsonld_scripts = [content for attrs, content in parser.scripts if attrs.get("type") == "application/ld+json"]
     require(len(jsonld_scripts) == 1, "Debe existir un único bloque JSON-LD.")
@@ -159,7 +184,7 @@ def main() -> int:
     validate_sitemap(canonical)
     validate_robots(canonical)
     validate_404(canonical)
-    print("HTML, JSON-LD, CSP, sitemap, robots y 404 válidos.")
+    print("Semántica, contadores, HTML, JSON-LD, CSP, sitemap, robots y 404 válidos.")
     return 0
 
 
