@@ -10,8 +10,16 @@
   white-space: nowrap;
 }
 
-.hero-identity-mobile {
-  display: none !important;
+.hero-identity > .hero-name {
+  margin-bottom: .55em;
+  color: var(--muted);
+  font-size: .34em;
+  line-height: 1.1;
+  letter-spacing: .14em;
+}
+
+.hero-identity > .hero-identity-mobile {
+  display: none;
 }
 
 .hero-identity .bull-mark {
@@ -32,12 +40,17 @@
     letter-spacing: -.045em;
   }
 
-  .hero-identity-desktop {
-    display: none !important;
+  .hero-identity > .hero-name {
+    margin-bottom: .65em;
+    font-size: .42em;
   }
 
-  .hero-identity-mobile {
-    display: block !important;
+  .hero-identity > .hero-identity-desktop {
+    display: none;
+  }
+
+  .hero-identity > .hero-identity-mobile {
+    display: block;
   }
 
   .hero-identity .bull-mark {
