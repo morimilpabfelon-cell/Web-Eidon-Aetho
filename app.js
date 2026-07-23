@@ -13,8 +13,7 @@ function isSafeUrl(value) {
   if (typeof value !== "string" || value.trim() === "") return false;
 
   try {
-    const url = new URL(value);
-    return url.protocol === "https:" || url.protocol === "http:";
+    return new URL(value).protocol === "https:";
   } catch {
     return false;
   }
@@ -22,33 +21,31 @@ function isSafeUrl(value) {
 
 function isSafeAssetPath(value) {
   if (typeof value !== "string") return false;
-  const path = value.trim();
-  return /^(?:\.\/)?assets\/[a-zA-Z0-9/_\-.]+$/.test(path);
+  return /^(?:\.\/)?assets\/[a-zA-Z0-9/_\-.]+$/.test(value.trim());
 }
 
 function cleanText(value, fallback = "") {
   return typeof value === "string" && value.trim() ? value.trim() : fallback;
 }
 
-async function loadList(path) {
-  try {
-    const response = await fetch(path, { cache: "no-store" });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const data = await response.json();
-    if (!Array.isArray(data)) throw new TypeError(`${path} debe contener una lista JSON`);
-    return data;
-  } catch (error) {
-    console.warn(`No se pudo cargar ${path}.`, error);
-    return [];
-  }
+function itemOrder(item) {
+  const order = Number(item.order);
+  return Number.isFinite(order) ? order : Number.MAX_SAFE_INTEGER;
 }
 
+async function loadList(path) {
+  const response = await fetch(path, { cache: "no-store" });
+  if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+
+  const data = await response.json();
+  if (!Array.isArray(data)) throw new TypeError(`${path} debe contener una lista JSON`);
+  return data;
+}
 
 function visibleItems(items) {
   return items
     .filter((item) => item && typeof item === "object" && item.visible === true)
-    .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+    .sort((a, b) => itemOrder(a) - itemOrder(b));
 }
 
 function setCounters(selector, value) {
@@ -85,7 +82,10 @@ function projectPreview(project) {
   if (isSafeUrl(source) || isSafeAssetPath(source)) {
     const image = document.createElement("img");
     image.src = source;
-    image.alt = cleanText(project.imageAlt, `Vista previa de ${cleanText(project.name, "proyecto")}`);
+    image.alt = cleanText(
+      project.imageAlt,
+      `Vista previa de ${cleanText(project.name, "proyecto")}`
+    );
     image.loading = "lazy";
     image.decoding = "async";
     media.append(image);
@@ -131,8 +131,8 @@ function featuredProjectCard(project, index, total) {
 
   if (Array.isArray(project.tags)) {
     project.tags.forEach((value) => {
-      const text = cleanText(String(value));
-      if (text) tags.append(projectTag(text));
+      const label = cleanText(String(value));
+      if (label) tags.append(projectTag(label));
     });
   }
 
@@ -172,9 +172,11 @@ function updateProjectCarousel(nextIndex) {
   );
 
   dots.querySelectorAll(".project-dot").forEach((dot, index) => {
-    const selected = index === projectCarousel.index;
-    dot.setAttribute("aria-current", selected ? "true" : "false");
-    dot.setAttribute("aria-selected", selected ? "true" : "false");
+    if (index === projectCarousel.index) {
+      dot.setAttribute("aria-current", "true");
+    } else {
+      dot.removeAttribute("aria-current");
+    }
   });
 
   previous.disabled = total <= 1;
@@ -213,7 +215,6 @@ function renderProjects(items) {
     const dot = document.createElement("button");
     dot.type = "button";
     dot.className = "project-dot";
-    dot.setAttribute("role", "tab");
     dot.setAttribute("aria-label", `Ver ${cleanText(project.name, `proyecto ${index + 1}`)}`);
     dot.addEventListener("click", () => updateProjectCarousel(index));
     dots.append(dot);
@@ -290,22 +291,29 @@ function renderNotes(items) {
   );
 }
 
-async function initialize() {
-  const [projects, socials, notes] = await Promise.all([
-    loadList(DATA_FILES.projects),
-    loadList(DATA_FILES.socials),
-    loadList(DATA_FILES.notes),
-  ]);
-
-  renderProjects(projects);
-  renderSocials(socials);
-  renderNotes(notes);
-
+function updateYear() {
   document.querySelectorAll("[data-year]").forEach((node) => {
     node.textContent = String(new Date().getFullYear());
   });
+}
 
-  document.documentElement.classList.add("content-hydrated");
+async function initialize() {
+  updateYear();
+
+  try {
+    const [projects, socials, notes] = await Promise.all([
+      loadList(DATA_FILES.projects),
+      loadList(DATA_FILES.socials),
+      loadList(DATA_FILES.notes)
+    ]);
+
+    renderProjects(projects);
+    renderSocials(socials);
+    renderNotes(notes);
+    document.documentElement.classList.add("content-hydrated");
+  } catch (error) {
+    console.error("No se pudo inicializar el contenido dinámico.", error);
+  }
 }
 
 initialize();
