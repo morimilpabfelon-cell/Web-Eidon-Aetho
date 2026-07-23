@@ -16,7 +16,7 @@ DATA_DIR = ROOT / "data"
 HTML_START = "<!-- PRERENDER:START -->"
 HTML_END = "<!-- PRERENDER:END -->"
 LOCAL_ASSET_PATTERN = re.compile(r"^(?:\./)?assets/[a-zA-Z0-9/_\-.]+$")
-VERSIONED_ASSETS = ("app.js", "ads.js")
+VERSIONED_ASSETS = ("app.js", "ads.js", "ad-marquee.css")
 
 
 def read_text(path: Path) -> str:
