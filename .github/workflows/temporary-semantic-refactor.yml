@@ -1,0 +1,543 @@
+name: Temporary semantic and CSS refactor
+
+on:
+  push:
+    branches:
+      - refactor/semantic-css-maintenance
+
+permissions:
+  contents: write
+
+jobs:
+  refactor:
+    if: ${{ !contains(github.event.head_commit.message, '[skip-refactor]') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: refactor/semantic-css-maintenance
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Apply semantic and CSS maintenance
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+
+          def read(path: str) -> str:
+              return Path(path).read_text(encoding="utf-8")
+
+          def write(path: str, content: str) -> None:
+              Path(path).write_text(content, encoding="utf-8", newline="\n")
+
+          def replace_once(source: str, old: str, new: str, label: str) -> str:
+              count = source.count(old)
+              if count != 1:
+                  raise RuntimeError(f"{label}: se esperaba 1 coincidencia y se encontraron {count}")
+              return source.replace(old, new, 1)
+
+          index = read("index.html")
+          index = replace_once(
+              index,
+              '          <h1 class="hero-identity">\n            <span>DIGITAL NOMAD</span>',
+              '          <h1 class="hero-identity">\n            <span class="hero-name">EIDON AETHO</span>\n            <span>DIGITAL NOMAD</span>',
+              "nombre dentro del h1",
+          )
+          index = replace_once(
+              index,
+              '        <div class="featured-project-stage" data-project-stage id="featured-project-panel"\n             role="tabpanel" aria-live="polite"></div>',
+              '        <div class="featured-project-stage" data-project-stage id="featured-project-panel"\n             role="tabpanel" aria-labelledby="featured-projects-title" aria-live="polite"></div>',
+              "etiqueta estática del panel",
+          )
+          write("index.html", index)
+
+          write(
+              "hero-heading.css",
+              '''.hero h1.hero-identity {
+  max-width: none;
+  font-size: clamp(2.25rem, 3vw, 3.45rem);
+  line-height: .94;
+  letter-spacing: -.055em;
+}
+
+.hero-identity > span {
+  display: block;
+  white-space: nowrap;
+}
+
+.hero-identity > .hero-name {
+  margin-bottom: .55em;
+  color: var(--muted);
+  font-size: .34em;
+  line-height: 1.1;
+  letter-spacing: .14em;
+}
+
+.hero-identity > .hero-identity-mobile {
+  display: none;
+}
+
+.hero-identity .bull-mark {
+  display: inline-block;
+  padding: .01em .11em .04em;
+  border: 3px solid var(--ink);
+  background: var(--lime);
+  box-shadow: 4px 4px 0 var(--ink);
+  font: inherit;
+  line-height: .86;
+  letter-spacing: -.035em;
+}
+
+@media (max-width: 560px) {
+  .hero h1.hero-identity {
+    font-size: clamp(1.5rem, 7.3vw, 2.2rem);
+    line-height: .97;
+    letter-spacing: -.045em;
+  }
+
+  .hero-identity > .hero-name {
+    margin-bottom: .65em;
+    font-size: .42em;
+  }
+
+  .hero-identity > .hero-identity-desktop {
+    display: none;
+  }
+
+  .hero-identity > .hero-identity-mobile {
+    display: block;
+  }
+
+  .hero-identity .bull-mark {
+    border-width: 2px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+}
+''',
+          )
+
+          write(
+              "hero-profile.css",
+              '''.hero-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-socials {
+  min-height: 48px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  margin-top: 22px;
+}
+
+.hero-social-link {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: var(--border);
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.hero-social-link span {
+  display: none;
+}
+
+.hero-social-link::before {
+  content: "";
+  width: 25px;
+  height: 25px;
+  display: block;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.hero-social-link[href*="tiktok.com"]::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 4v10a4.5 4.5 0 1 1-3-4.24V6.2c2.05 0 3.87 1.07 4.9 2.68'/%3E%3C/svg%3E");
+}
+
+.hero-social-link[href*="x.com"]::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 4l14 16M19 4L5 20'/%3E%3C/svg%3E");
+}
+
+.hero-social-link[href*="youtube.com"]::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3' y='6' width='18' height='12' rx='3' fill='none' stroke='%23111' stroke-width='2'/%3E%3Cpath d='M10 9l6 3-6 3z' fill='%23111'/%3E%3C/svg%3E");
+}
+
+.hero-social-link[href*="t.me"]::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 4L3.8 10.7c-.9.35-.86 1.66.06 1.95l4.4 1.39 1.68 4.92c.28.82 1.34.99 1.86.29l2.45-3.27 4.56 3.36c.7.51 1.68.12 1.84-.73L22 5.22C22.17 4.29 21.88 3.66 21 4Z'/%3E%3Cpath d='M8.26 14.04 18.2 7.8M9.94 18.96l.2-4.02'/%3E%3C/svg%3E");
+}
+
+.hero-social-link:hover,
+.hero-social-link:focus-visible {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.hero-lede {
+  max-width: 46ch;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: clamp(.95rem, .9rem + .3vw, 1.08rem);
+  line-height: 1.55;
+}
+
+.hero-visual {
+  padding: 30px 30px 36px;
+  background: #0833a2ff;
+}
+
+.visual-frame {
+  width: min(100%, 390px);
+  aspect-ratio: 4 / 5;
+  padding: 13px;
+  border: var(--border);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.photo-canvas {
+  background: #111;
+}
+
+.hero-photo {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 42%;
+}
+
+.status-card {
+  width: min(300px, calc(100% - 44px));
+  right: 16px;
+  bottom: 16px;
+}
+
+@media (max-width: 560px) {
+  .hero-socials {
+    justify-content: center;
+  }
+
+  .hero-lede {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .hero-visual {
+    padding: 18px;
+  }
+
+  .visual-frame {
+    width: min(100%, 340px);
+  }
+
+  .status-card {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-social-link {
+    transition: none;
+  }
+}
+''',
+          )
+
+          styles = read("styles.css")
+          styles = replace_once(
+              styles,
+              '''.hero h1 {
+  width: 100%;
+  max-width: 10ch;
+  margin: 20px 0 16px;
+  font-family: var(--display-font);
+  font-size: clamp(3rem, 3.7vw, 4.25rem);
+  font-weight: 700;
+  line-height: .98;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+}''',
+              '''.hero h1 {
+  width: 100%;
+  margin: 20px 0 16px;
+  font-family: var(--display-font);
+  font-weight: 700;
+  text-transform: uppercase;
+}''',
+              "propiedad única del encabezado",
+          )
+          styles = replace_once(
+              styles,
+              '''.hero-visual {
+  min-width: 0;
+  min-height: 500px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 26px;
+  border-left: var(--border);
+}''',
+              '''.hero-visual {
+  min-width: 0;
+  min-height: 500px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-left: var(--border);
+}''',
+              "padding del hero visual",
+          )
+          styles = replace_once(
+              styles,
+              '''.visual-frame {
+  width: min(100%, 360px);
+  aspect-ratio: 4 / 5;
+  padding: 14px;
+  border: var(--border);
+  box-shadow: var(--shadow);
+}
+
+''',
+              "",
+              "propietario único de visual-frame",
+          )
+          styles = replace_once(
+              styles,
+              '''.status-card {
+  width: min(280px, calc(100% - 36px));
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  gap: 7px;
+  padding: 16px;
+  border: var(--border);
+  box-shadow: var(--shadow);
+  font-family: "Courier New", monospace;
+  font-size: .86rem;
+  overflow-wrap: anywhere;
+}''',
+              '''.status-card {
+  position: absolute;
+  display: grid;
+  gap: 7px;
+  padding: 16px;
+  border: var(--border);
+  box-shadow: var(--shadow);
+  font-family: "Courier New", monospace;
+  font-size: .86rem;
+  overflow-wrap: anywhere;
+}''',
+              "dimensiones únicas de status-card",
+          )
+          for old, label in (
+              ('''  .hero h1 {
+    max-width: 10ch;
+    font-size: clamp(2.9rem, 6.2vw, 4rem);
+  }
+
+''', "h1 a 1120px"),
+              ('''  .hero h1 {
+    max-width: none;
+    font-size: clamp(2.55rem, 9vw, 3.7rem);
+    line-height: 1;
+  }
+
+''', "h1 a 820px"),
+              ('''  .hero h1 {
+    font-size: clamp(2.2rem, 10.5vw, 3rem);
+  }
+
+''', "h1 a 560px"),
+              ('''  .hero h1 {
+    font-size: 2.1rem;
+  }
+
+''', "h1 a 380px"),
+              ('''  .visual-frame {
+    width: min(100%, 320px);
+  }
+
+''', "visual-frame móvil duplicado"),
+          ):
+              styles = replace_once(styles, old, "", label)
+          styles = replace_once(
+              styles,
+              '''  .hero-visual {
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+  }''',
+              '''  .hero-visual {
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+  }''',
+              "padding móvil del hero visual",
+          )
+          styles = replace_once(
+              styles,
+              '''  .status-card {
+    position: static;
+    width: 100%;
+    margin-top: 16px;
+  }''',
+              '''  .status-card {
+    position: static;
+    margin-top: 16px;
+  }''',
+              "ancho móvil de status-card",
+          )
+          write("styles.css", styles)
+
+          prerender = read("scripts/prerender.py")
+          prerender = replace_once(
+              prerender,
+              'VERSIONED_ASSETS = ("app.js", "ads.js", "ad-marquee.css", "hero-profile.css")',
+              '''VERSIONED_ASSETS = (
+    "styles.css",
+    "background-stickers.css",
+    "ad-marquee.css",
+    "hero-profile.css",
+    "hero-heading.css",
+    "featured-projects.css",
+    "app.js",
+    "ads.js",
+)''',
+              "lista completa de recursos versionados",
+          )
+          prerender = replace_once(
+              prerender,
+              '''def update_link_count(source: str, count: int) -> str:
+    pattern = re.compile(r'(<b\\s+data-link-count>)[^<]*(</b>)')
+    updated, matches = pattern.subn(rf"\\g<1>{count}\\g<2>", source, count=1)
+    if matches != 1:
+        raise ValueError("No se encontró data-link-count en index.html.")
+    return updated
+''',
+              '''def update_counter(source: str, attribute: str, count: int) -> str:
+    pattern = re.compile(rf'(<b\\s+{re.escape(attribute)}>)[^<]*(</b>)')
+    updated, matches = pattern.subn(rf"\\g<1>{count}\\g<2>", source, count=1)
+    if matches != 1:
+        raise ValueError(f"No se encontró {attribute} en index.html.")
+    return updated
+''',
+              "generador genérico de contadores",
+          )
+          prerender = replace_once(
+              prerender,
+              '    source = update_link_count(source, len(social_urls))\n    source = update_social_hidden_state(source, len(social_urls))',
+              '''    source = update_counter(source, "data-project-count", len(projects))
+    source = update_counter(source, "data-link-count", len(social_urls))
+    source = update_counter(source, "data-note-count", len(notes))
+    source = update_social_hidden_state(source, len(social_urls))''',
+              "sincronización de todos los contadores",
+          )
+          write("scripts/prerender.py", prerender)
+
+          validator = read("scripts/validate_static.py")
+          validator = replace_once(validator, "import json\n", "import json\nimport re\n", "importación de regex")
+          validator = replace_once(
+              validator,
+              'SOCIALS_PATH = ROOT / "data" / "socials.json"\n',
+              'SOCIALS_PATH = ROOT / "data" / "socials.json"\nPROJECTS_PATH = ROOT / "data" / "projects.json"\nNOTES_PATH = ROOT / "data" / "notes.json"\n',
+              "rutas de contenido",
+          )
+          validator = replace_once(
+              validator,
+              '''def validate_index() -> str:
+''',
+              '''def visible_count(path: Path) -> int:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    require(isinstance(payload, list), f"{path.name} debe contener una lista.")
+    return sum(1 for item in payload if isinstance(item, dict) and item.get("visible") is True)
+
+
+def counter_value(source: str, attribute: str) -> int:
+    matches = re.findall(rf'<b\\s+{re.escape(attribute)}>(\\d+)</b>', source)
+    require(len(matches) == 1, f"Se esperaba un único contador {attribute}.")
+    return int(matches[0])
+
+
+def validate_index() -> str:
+''',
+              "validadores de contenido estático",
+          )
+          validator = replace_once(
+              validator,
+              '''    canonical = canonical_url(parser)
+
+    require(meta_value(parser, "property", "og:url") == canonical, "og:url no coincide con canonical.")''',
+              '''    canonical = canonical_url(parser)
+
+    h1_blocks = re.findall(r"<h1\\b[^>]*>(.*?)</h1>", source, flags=re.IGNORECASE | re.DOTALL)
+    require(len(h1_blocks) == 1, "Debe existir un único h1.")
+    h1_text = re.sub(r"<[^>]+>", " ", h1_blocks[0])
+    h1_text = " ".join(h1_text.split()).casefold()
+    require("eidon aetho" in h1_text, "El h1 debe identificar a Eidon Aetho.")
+    require('aria-labelledby="featured-projects-title"' in source, "El panel de proyectos necesita etiqueta estática.")
+
+    require(meta_value(parser, "property", "og:url") == canonical, "og:url no coincide con canonical.")''',
+              "semántica del documento",
+          )
+          validator = replace_once(
+              validator,
+              '''    require(raw_social_urls == social_urls, "Los enlaces sociales estáticos no coinciden con socials.json.")
+
+    jsonld_scripts''',
+              '''    require(raw_social_urls == social_urls, "Los enlaces sociales estáticos no coinciden con socials.json.")
+    require(counter_value(source, "data-project-count") == visible_count(PROJECTS_PATH), "Contador de proyectos desactualizado.")
+    require(counter_value(source, "data-link-count") == len(social_urls), "Contador de enlaces desactualizado.")
+    require(counter_value(source, "data-note-count") == visible_count(NOTES_PATH), "Contador de notas desactualizado.")
+
+    jsonld_scripts''',
+              "validación de contadores",
+          )
+          validator = replace_once(
+              validator,
+              '    print("HTML, JSON-LD, CSP, sitemap, robots y 404 válidos.")',
+              '    print("Semántica, contadores, HTML, JSON-LD, CSP, sitemap, robots y 404 válidos.")',
+              "mensaje final",
+          )
+          write("scripts/validate_static.py", validator)
+          PY
+
+      - name: Regenerate static HTML
+        run: python scripts/prerender.py
+
+      - name: Validate changes
+        run: |
+          python -m py_compile scripts/prerender.py
+          python -m py_compile scripts/validate_static.py
+          python scripts/prerender.py --check
+          python scripts/validate_static.py
+          node --check app.js
+          node --check ads.js
+
+      - name: Commit validated changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html styles.css hero-profile.css hero-heading.css scripts/prerender.py scripts/validate_static.py
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "refactor: mejorar semántica y aislar estilos [skip-refactor]"
+          git push origin HEAD:refactor/semantic-css-maintenance
