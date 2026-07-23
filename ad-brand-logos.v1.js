@@ -40,14 +40,12 @@
     if (!brand) return;
 
     const currentTitle = card.querySelector("h3")?.textContent?.trim() || brand.name;
-    const currentDescription = card.querySelector("p")?.textContent?.trim() || "Enlace de referido";
 
     const emblem = document.createElement("span");
     const logo = document.createElement("img");
     const copy = document.createElement("span");
     const label = document.createElement("span");
     const title = document.createElement("strong");
-    const description = document.createElement("span");
     const arrow = document.createElement("span");
 
     emblem.className = "ad-brand-emblem";
@@ -66,9 +64,7 @@
     label.textContent = "ENLACE DE REFERIDO";
     title.className = "ad-brand-title";
     title.textContent = currentTitle;
-    description.className = "ad-brand-description";
-    description.textContent = currentDescription;
-    copy.append(label, title, description);
+    copy.append(label, title);
 
     arrow.className = "ad-brand-arrow";
     arrow.textContent = "↗";
