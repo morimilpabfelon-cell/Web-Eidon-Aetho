@@ -1,27 +1,27 @@
 [
   {
-    "label": "AD 01",
+    "label": "REFERIDO",
     "title": "BINANCE",
-    "description": "Enlace de referido · Riesgo cripto",
-    "accent": "#c8f35a",
+    "description": "Registro mediante tu enlace",
+    "accent": "#f0b90b",
     "url": "https://www.binance.com/register?ref=B3FNDEM4&utm_medium=app_share_link",
     "visible": true,
     "order": 10
   },
   {
-    "label": "AD 02",
+    "label": "REFERIDO",
     "title": "TRADINGVIEW",
-    "description": "Planes · Enlace de referido",
-    "accent": "#69b8e8",
+    "description": "Planes mediante tu enlace",
+    "accent": "#2962ff",
     "url": "https://es.tradingview.com/pricing/?share_your_love=Morimil&mobileapp=true",
     "visible": true,
     "order": 20
   },
   {
-    "label": "AD 03",
+    "label": "REFERIDO",
     "title": "TIKTOK COINS",
-    "description": "Coins · Enlace de referido",
-    "accent": "#f58ab1",
+    "description": "Coins mediante tu enlace",
+    "accent": "#fe2c55",
     "url": "https://www.tiktok.com/coin?rc=3H7F2BA8&rie=",
     "visible": true,
     "order": 30

@@ -1,7 +1,8 @@
 {
   "version": 1,
   "include": [
-    "/api/youtube*"
+    "/api/youtube*",
+    "/api/referral-previews*"
   ],
   "exclude": []
 }
