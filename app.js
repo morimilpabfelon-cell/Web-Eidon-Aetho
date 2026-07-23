@@ -304,6 +304,8 @@ async function initialize() {
   document.querySelectorAll("[data-year]").forEach((node) => {
     node.textContent = String(new Date().getFullYear());
   });
+
+  document.documentElement.classList.add("content-hydrated");
 }
 
 initialize();

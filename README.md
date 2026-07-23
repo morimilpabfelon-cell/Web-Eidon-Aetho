@@ -103,3 +103,19 @@ Edita `data/ads.json`. El anuncio solo se muestra cuando la URL HTTPS es válida
 - Mantén `url` como cadena vacía cuando no quieras crear un enlace.
 - Usa `visible: false` para ocultar un elemento sin borrarlo.
 - Revisa el contenido antes de fusionarlo con `main`.
+
+<!-- PRERENDER-DOCS:START -->
+## Pre-renderizado
+
+`data/projects.json`, `data/socials.json` y `data/notes.json` siguen siendo la fuente de verdad.
+
+Despues de editar esos archivos, regenera el fallback HTML:
+
+```powershell
+python scripts/prerender.py
+```
+
+El script actualiza el bloque `PRERENDER` dentro de `index.html`. El contenido queda disponible sin JavaScript y para crawlers que solo leen HTML. Cuando `app.js` termina de renderizar la interfaz interactiva, oculta el fallback mediante la clase `content-hydrated`.
+
+No requiere un workflow personalizado de GitHub Pages.
+<!-- PRERENDER-DOCS:END -->
