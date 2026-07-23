@@ -20,6 +20,18 @@
     }
   ];
 
+  function ensureStoreLink() {
+    const header = document.querySelector(".site-brand");
+    if (!header || header.querySelector(".site-brand__store")) return;
+
+    const link = document.createElement("a");
+    link.className = "site-brand__store";
+    link.href = "store/";
+    link.textContent = "TIENDA ↗";
+    link.setAttribute("aria-label", "Abrir Eidon-Store");
+    header.append(link);
+  }
+
   function matchesDomain(hostname, domain) {
     return hostname === domain || hostname.endsWith(`.${domain}`);
   }
@@ -82,6 +94,8 @@
     if (node.matches(".ad-card")) decorateCard(node);
     node.querySelectorAll(".ad-card").forEach(decorateCard);
   }
+
+  ensureStoreLink();
 
   const track = document.querySelector("[data-ad-track]");
   if (!track) return;
