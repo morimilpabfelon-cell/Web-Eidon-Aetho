@@ -1,0 +1,35 @@
+.ad-badge.ad-badge--with-logo {
+  min-width: 60px;
+  min-height: 58px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 3px;
+  padding: 5px 6px 4px;
+}
+
+.ad-brand-logo {
+  width: 30px;
+  height: 30px;
+  display: block;
+  object-fit: contain;
+}
+
+.ad-badge-label {
+  display: block;
+  font-size: .54rem;
+  line-height: 1;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .ad-badge.ad-badge--with-logo {
+    min-width: 56px;
+  }
+
+  .ad-brand-logo {
+    width: 28px;
+    height: 28px;
+  }
+}

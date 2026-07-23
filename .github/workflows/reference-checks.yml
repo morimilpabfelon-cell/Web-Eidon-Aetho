@@ -39,6 +39,7 @@ jobs:
         run: |
           node --check app.js
           node --check ads.js
+          node --check ad-brand-logos.v1.js
           node --check youtube-feed.v1.js
           while IFS= read -r -d '' file; do
             node --check "$file"
