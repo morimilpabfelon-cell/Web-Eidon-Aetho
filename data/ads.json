@@ -16,5 +16,14 @@
     "url": "https://es.tradingview.com/pricing/?share_your_love=Morimil&mobileapp=true",
     "visible": true,
     "order": 20
+  },
+  {
+    "label": "AD 03",
+    "title": "TIKTOK COINS",
+    "description": "Coins · Enlace de referido",
+    "accent": "#f58ab1",
+    "url": "https://www.tiktok.com/coin?rc=3H7F2BA8&rie=",
+    "visible": true,
+    "order": 30
   }
 ]
