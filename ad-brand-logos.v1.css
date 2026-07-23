@@ -1,302 +1,151 @@
-.ad-rail {
-  padding: 12px;
-  background: var(--mint);
-}
-
-.ad-viewport {
-  overflow: visible;
-  cursor: default;
-  touch-action: auto;
-}
-
-.ad-viewport.is-dragging {
-  cursor: default;
-}
-
-.ad-track {
-  width: 100%;
-  min-width: 0;
-}
-
-.ad-group {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.ad-group:not(:first-child) {
-  display: none;
-}
-
-.ad-card.ad-card--rich {
-  width: auto;
-  min-height: 244px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 3px solid var(--ink);
+.ad-card.ad-card--brand {
+  width: clamp(310px, 31vw, 420px);
+  min-height: 108px;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 12px 16px;
+  border-right: var(--border);
   background: var(--paper);
-  box-shadow: 5px 5px 0 var(--ink);
   color: var(--ink);
   isolation: isolate;
-  transform: none;
-  transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
-.ad-card.ad-card--rich:hover,
-.ad-card.ad-card--rich:focus-visible {
-  transform: translate(-3px, -3px);
-  box-shadow: 8px 8px 0 var(--ink);
+.ad-card.ad-card--brand:hover,
+.ad-card.ad-card--brand:focus-visible {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
 }
 
-.ad-brand-media {
-  position: relative;
-  min-height: 112px;
-  display: block;
-  overflow: hidden;
-  border-bottom: 3px solid var(--ink);
-}
-
-.ad-brand-preview,
-.ad-brand-fallback {
-  width: 100%;
-  height: 112px;
-}
-
-.ad-brand-preview {
-  display: block;
-  object-fit: cover;
-  object-position: center;
-  background: var(--paper);
-}
-
-.ad-brand-preview[hidden],
-.ad-brand-fallback[hidden] {
-  display: none;
-}
-
-.ad-brand-fallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 16px;
+.ad-brand-emblem {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border: 3px solid currentColor;
+  background: rgba(255, 255, 255, .16);
 }
 
 .ad-brand-mark {
-  width: 58px;
-  height: 58px;
-  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
   display: block;
   object-fit: contain;
 }
 
-.ad-brand-wordmark {
-  font-family: var(--display-font);
-  font-size: clamp(1.55rem, 2.5vw, 2.25rem);
-  font-weight: 950;
-  line-height: .9;
-  letter-spacing: -.05em;
-  text-transform: uppercase;
-}
-
-.ad-brand-body {
+.ad-brand-copy {
   min-width: 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 12px 14px 13px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
 }
 
-.ad-brand-topline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.ad-referral-pill,
-.ad-brand-domain {
-  font-size: .6rem;
-  font-weight: 900;
+.ad-referral-label {
+  font-size: .57rem;
+  font-weight: 950;
   line-height: 1;
-  letter-spacing: .04em;
+  letter-spacing: .07em;
   text-transform: uppercase;
-}
-
-.ad-referral-pill {
-  padding: 5px 7px;
-  border: 2px solid currentColor;
-  background: rgba(255, 255, 255, .88);
-  color: #111;
-}
-
-.ad-brand-domain {
-  opacity: .72;
-}
-
-.ad-brand-eyebrow {
-  margin-top: 3px;
-  font-size: .65rem;
-  font-weight: 900;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  opacity: .76;
+  opacity: .82;
 }
 
 .ad-brand-title {
   display: block;
   font-family: var(--display-font);
-  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
   font-weight: 950;
-  line-height: .95;
-  letter-spacing: -.04em;
+  line-height: .9;
+  letter-spacing: -.045em;
   text-transform: uppercase;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ad-brand-description {
   display: block;
-  font-size: .76rem;
+  font-size: .72rem;
   font-weight: 750;
-  line-height: 1.25;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: .82;
 }
 
-.ad-brand-notice {
-  display: block;
-  margin-top: auto;
-  font-size: .62rem;
-  line-height: 1.25;
-  opacity: .78;
-}
-
-.ad-brand-cta {
-  align-self: flex-start;
-  display: inline-block;
-  margin-top: 5px;
-  padding: 7px 9px;
-  border: 2px solid currentColor;
-  font-size: .68rem;
+.ad-brand-arrow {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 3px solid currentColor;
+  font-size: 1.15rem;
   font-weight: 950;
   line-height: 1;
-  text-transform: uppercase;
 }
 
-.ad-card--binance,
-.ad-card--binance .ad-brand-body,
-.ad-card--binance .ad-brand-fallback {
-  background: #f0b90b;
-  color: #111;
+.ad-card--binance {
+  background: #f0b90b !important;
+  color: #111 !important;
 }
 
-.ad-card--tradingview,
-.ad-card--tradingview .ad-brand-body,
-.ad-card--tradingview .ad-brand-fallback {
-  background: #131722;
-  color: #fff;
+.ad-card--tradingview {
+  background: #131722 !important;
+  color: #fff !important;
+}
+
+.ad-card--tradingview .ad-brand-emblem,
+.ad-card--tradingview .ad-brand-arrow {
+  background: #2962ff;
 }
 
 .ad-card--tradingview .ad-brand-mark {
   filter: invert(1);
 }
 
-.ad-card--tiktok,
-.ad-card--tiktok .ad-brand-body,
-.ad-card--tiktok .ad-brand-fallback {
-  background: #010101;
-  color: #fff;
-}
-
-.ad-card--tiktok .ad-brand-fallback {
+.ad-card--tiktok {
   background:
-    radial-gradient(circle at 20% 20%, rgba(37, 244, 238, .38), transparent 34%),
-    radial-gradient(circle at 80% 72%, rgba(254, 44, 85, .46), transparent 36%),
-    #010101;
+    radial-gradient(circle at 12% 20%, rgba(37, 244, 238, .34), transparent 32%),
+    radial-gradient(circle at 82% 78%, rgba(254, 44, 85, .38), transparent 34%),
+    #010101 !important;
+  color: #fff !important;
 }
 
-.ad-card--tiktok .ad-brand-mark {
-  filter: invert(1) drop-shadow(-3px 0 0 #25f4ee) drop-shadow(3px 0 0 #fe2c55);
-}
-
-.ad-card--tradingview .ad-referral-pill,
-.ad-card--tiktok .ad-referral-pill {
-  background: #fff;
-  color: #111;
-}
-
-.ad-card--tradingview .ad-brand-cta {
-  background: #2962ff;
-  color: #fff;
-}
-
-.ad-card--tiktok .ad-brand-cta {
+.ad-card--tiktok .ad-brand-emblem,
+.ad-card--tiktok .ad-brand-arrow {
   border-color: #25f4ee;
   box-shadow: 3px 3px 0 #fe2c55;
 }
 
-.ad-card--binance .ad-brand-cta {
-  background: #111;
-  color: #f0b90b;
+.ad-card--tiktok .ad-brand-mark {
+  filter: invert(1) drop-shadow(-2px 0 0 #25f4ee) drop-shadow(2px 0 0 #fe2c55);
 }
 
-.ad-card.has-official-preview .ad-brand-media::after {
-  content: "VISTA PREVIA OFICIAL DEL ENLACE";
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  padding: 5px 7px;
-  border: 2px solid #111;
-  background: rgba(255, 255, 255, .92);
-  color: #111;
-  font-size: .55rem;
-  font-weight: 950;
-  line-height: 1;
-  letter-spacing: .03em;
-}
-
-@media (max-width: 960px) {
-  .ad-group {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (max-width: 760px) {
+  .ad-card.ad-card--brand {
+    width: min(86vw, 370px);
+    min-height: 100px;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    gap: 11px;
+    padding: 10px 13px;
   }
 
-  .ad-card.ad-card--rich:last-child {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 620px) {
-  .ad-rail {
-    padding: 9px;
-  }
-
-  .ad-group {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .ad-card.ad-card--rich,
-  .ad-card.ad-card--rich:last-child {
-    min-height: 218px;
-    grid-column: auto;
-  }
-
-  .ad-brand-media,
-  .ad-brand-preview,
-  .ad-brand-fallback {
-    height: 98px;
-    min-height: 98px;
+  .ad-brand-emblem {
+    width: 52px;
+    height: 52px;
   }
 
   .ad-brand-mark {
-    width: 50px;
-    height: 50px;
+    width: 34px;
+    height: 34px;
   }
 
-  .ad-brand-wordmark {
-    font-size: 1.65rem;
+  .ad-brand-title {
+    font-size: 1.28rem;
+  }
+
+  .ad-brand-arrow {
+    width: 31px;
+    height: 31px;
   }
 }
