@@ -61,7 +61,7 @@ jobs:
           test -f store/app.js
           grep -q 'data/products.json' store/app.js
           grep -q 'data/config.json' store/app.js
-          grep -q 'href="store/"' ad-brand-logos.v1.js
+          grep -q 'link.href = "store/"' ad-brand-logos.v1.js
 
       - name: Verify generated HTML
         run: python scripts/prerender.py --check
