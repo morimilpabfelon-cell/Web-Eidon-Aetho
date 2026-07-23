@@ -1,33 +1,53 @@
 # Web Eidon Aetho
 
-Página personal de Eidon Aetho con publicación cerrada por defecto.
+Página personal estática de Eidon Aetho. El contenido se publica únicamente desde los archivos JSON del repositorio; la web no descubre ni agrega proyectos, enlaces, notas o anuncios automáticamente.
 
-La web no descubre, agrega ni publica proyectos, repositorios, canales, enlaces o anuncios automáticamente. El contenido solo aparece cuando el propietario lo escribe manualmente en los archivos JSON.
+## Publicación
 
-## Publicación con GitHub Pages
+GitHub Pages debe usar:
 
 - Source: `Deploy from a branch`
 - Branch: `main`
 - Folder: `/ (root)`
 
-No se necesita GitHub Actions.
+No se necesita un workflow de despliegue. El workflow del repositorio solo valida cambios.
 
-## Archivos controlados por el propietario
+## Estructura
 
-- `data/projects.json`: proyectos y enlaces opcionales.
-- `data/socials.json`: canales, perfiles u otros enlaces.
-- `data/notes.json`: notas públicas.
-- `data/ads.json`: anuncios del carrusel horizontal.
+```text
+assets/                  imágenes y recursos locales
+data/
+  projects.json          proyectos publicados
+  socials.json           enlaces oficiales
+  notes.json             notas públicas
+  ads.json               anuncios patrocinados
+scripts/
+  prerender.py           genera y comprueba el fallback HTML
+.github/workflows/
+  reference-checks.yml   controles obligatorios del repositorio
+app.js                    proyectos, enlaces y notas
+ads.js                    carrusel de anuncios
+index.html                documento publicado por GitHub Pages
+```
 
-Los archivos que todavía no tienen contenido deben conservar una lista JSON vacía:
+## Contrato de contenido
+
+Todos los archivos de `data/` contienen una lista JSON. Cada elemento debe incluir:
+
+- `visible`: booleano. Solo `true` publica el elemento.
+- `order`: número usado para ordenar.
+
+Cuando no exista contenido, conserva una lista vacía:
 
 ```json
 []
 ```
 
-## Agregar un proyecto
+Los enlaces externos deben usar HTTPS. Las imágenes pueden usar HTTPS o una ruta local bajo `assets/`.
 
-Edita `data/projects.json`:
+## Proyecto
+
+Ejemplo para `data/projects.json`:
 
 ```json
 {
@@ -35,36 +55,33 @@ Edita `data/projects.json`:
   "category": "",
   "description": "",
   "tags": [],
-  "image": "assets/imagen-del-proyecto.webp",
+  "image": "assets/projects/imagen.webp",
   "imageAlt": "",
   "url": "",
   "linkLabel": "Ver detalles →",
-  "featured": true,
   "visible": true,
   "order": 10
 }
 ```
 
-Usa preferentemente imágenes guardadas dentro de `assets/`. Los enlaces externos y las imágenes remotas deben usar HTTPS.
+## Enlace oficial
 
-## Agregar un enlace
-
-Edita `data/socials.json`:
+Ejemplo para `data/socials.json`:
 
 ```json
 {
   "name": "",
   "description": "",
   "icon": "",
-  "url": "",
+  "url": "https://example.com",
   "visible": true,
   "order": 10
 }
 ```
 
-## Agregar una nota
+## Nota
 
-Edita `data/notes.json`:
+Ejemplo para `data/notes.json`:
 
 ```json
 {
@@ -77,9 +94,9 @@ Edita `data/notes.json`:
 }
 ```
 
-## Agregar un anuncio
+## Anuncio
 
-Edita `data/ads.json`. El anuncio solo se muestra cuando la URL HTTPS es válida y `visible` es `true`.
+Ejemplo para `data/ads.json`:
 
 ```json
 {
@@ -87,35 +104,45 @@ Edita `data/ads.json`. El anuncio solo se muestra cuando la URL HTTPS es válida
   "title": "",
   "description": "",
   "accent": "#c8f35a",
-  "url": "",
+  "url": "https://example.com",
   "visible": true,
   "order": 10
 }
 ```
 
-`accent` acepta únicamente colores hexadecimales completos como `#c8f35a`. Los anuncios externos se abren con atributos de seguridad y relación `sponsored`.
+`accent` acepta colores hexadecimales completos. Los anuncios externos se abren con `noopener`, `noreferrer` y `sponsored`.
 
-## Reglas de seguridad
-
-- No publiques repositorios, documentos o enlaces delicados.
-- No guardes contraseñas, tokens, llaves privadas ni archivos `.env` en el repositorio.
-- Revisa el destino de cada anuncio antes de publicarlo.
-- Mantén `url` como cadena vacía cuando no quieras crear un enlace.
-- Usa `visible: false` para ocultar un elemento sin borrarlo.
-- Revisa el contenido antes de fusionarlo con `main`.
-
-<!-- PRERENDER-DOCS:START -->
 ## Pre-renderizado
 
-`data/projects.json`, `data/socials.json` y `data/notes.json` siguen siendo la fuente de verdad.
-
-Despues de editar esos archivos, regenera el fallback HTML:
+`projects.json`, `socials.json` y `notes.json` son la fuente de verdad. Después de editarlos, regenera el fallback HTML:
 
 ```powershell
 python scripts/prerender.py
 ```
 
-El script actualiza el bloque `PRERENDER` dentro de `index.html`. El contenido queda disponible sin JavaScript y para crawlers que solo leen HTML. Cuando `app.js` termina de renderizar la interfaz interactiva, oculta el fallback mediante la clase `content-hydrated`.
+El script también actualiza las versiones de caché de `app.js` y `ads.js` usando el hash real de cada archivo.
 
-No requiere un workflow personalizado de GitHub Pages.
-<!-- PRERENDER-DOCS:END -->
+Para comprobar que el repositorio está actualizado sin modificar archivos:
+
+```powershell
+python scripts/prerender.py --check
+```
+
+## Verificación local
+
+```powershell
+python -m py_compile scripts/prerender.py
+python scripts/prerender.py --check
+node --check app.js
+node --check ads.js
+```
+
+El job de GitHub Actions se llama exactamente `reference-checks`.
+
+## Seguridad
+
+- No publiques contraseñas, tokens, llaves privadas ni archivos `.env`.
+- No publiques repositorios, documentos o enlaces delicados.
+- Verifica el destino de cada enlace y anuncio.
+- Usa `visible: false` para retirar contenido sin borrarlo.
+- Revisa y valida los cambios antes de fusionarlos con `main`.

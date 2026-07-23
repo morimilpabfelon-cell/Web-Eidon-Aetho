@@ -55,21 +55,14 @@
   padding: 14px 18px;
   border-right: var(--border);
   background: linear-gradient(135deg, var(--ad-accent) 0 28%, var(--paper) 28% 100%);
-}
-
-.ad-card[href] {
   cursor: pointer;
   transition: background 140ms ease, transform 140ms ease;
 }
 
-.ad-card[href]:hover,
-.ad-card[href]:focus-visible {
+.ad-card:hover,
+.ad-card:focus-visible {
   background: var(--ad-accent);
   transform: translateY(-2px);
-}
-
-.ad-logo {
-  display: none;
 }
 
 .ad-card-copy {
@@ -109,14 +102,6 @@
 .ad-arrow {
   font-size: 1.25rem;
   font-weight: 900;
-}
-
-.ad-placeholder {
-  cursor: default;
-}
-
-.ad-placeholder .ad-arrow {
-  opacity: .35;
 }
 
 @media (max-width: 760px) {
