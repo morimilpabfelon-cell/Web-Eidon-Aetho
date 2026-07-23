@@ -115,10 +115,16 @@ export async function onRequestGet({ request, env }) {
   }
 }
 
-export function onRequest({ request }) {
-  if (request.method === "GET") return onRequestGet;
+export function onRequestOptions() {
+  return new Response(null, {
+    status: 204,
+    headers: { allow: "GET, OPTIONS" }
+  });
+}
+
+export function onRequestPost() {
   return new Response("Method Not Allowed", {
     status: 405,
-    headers: { allow: "GET" }
+    headers: { allow: "GET, OPTIONS" }
   });
 }
