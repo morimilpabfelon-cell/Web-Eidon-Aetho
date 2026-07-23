@@ -49,5 +49,22 @@ jobs:
       - name: Verify generated HTML
         run: python scripts/prerender.py --check
 
+      - name: Build expected HTML diagnostic
+        if: failure()
+        run: |
+          cp index.html index.committed.html
+          python scripts/prerender.py
+          mv index.html index.expected.html
+          mv index.committed.html index.html
+
+      - name: Upload expected HTML diagnostic
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: expected-html
+          path: index.expected.html
+          if-no-files-found: error
+          retention-days: 1
+
       - name: Validate static publication
         run: python scripts/validate_static.py
